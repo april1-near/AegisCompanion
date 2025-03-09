@@ -27,9 +27,7 @@ public class SecurityConfig {
     private static final List<String> PERMIT_ALL_PATHS = Arrays.asList(
             "/api/v1/auth/**",         // 认证接口放行（登录/注册）
             "/swagger-ui/**",          // Swagger UI 接口文档
-            "/v3/api-docs/**",         // OpenAPI 描述文档
-            "/ws-endpoint/**",         // WebSocket Endpoint（包括子路径）
-            "/ws-endpoint"             // WebSocket Endpoint（无斜杠）
+            "/v3/api-docs/**"       // OpenAPI 描述文档
     );
 
     @Bean
@@ -44,8 +42,9 @@ public class SecurityConfig {
 
                 // 请求授权配置
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PERMIT_ALL_PATHS.toArray(new String[0])).permitAll() // 白名单路径
+                        .requestMatchers(PERMIT_ALL_PATHS.toArray(new String[0])).permitAll() // 白名单路径放行
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // 管理员接口
+                        .requestMatchers("/api/v1/users/**").authenticated()
                         .requestMatchers("/api/v1/doctors/schedules").hasAnyRole("ADMIN", "MAINTENANCE") // 医生排班管理
                         .requestMatchers("/api/v1/doctors/**").permitAll() // 医生信息查询（公开）
                         .requestMatchers("/api/v1/Medical/doctors/**").permitAll() // 医生和排班查询（公开）
@@ -58,53 +57,28 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 增强型CORS配置（支持WebSocket）
+    // 修改CORS配置，确保支持WebSocket
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
-        // 允许来源配置 - 开发环境下可以使用通配符，生产环境应该严格限制
-        if (isDevelopmentEnvironment()) {
-            config.addAllowedOriginPattern("*"); // 开发环境允许所有来源
-        } else {
-            // 严格指定可信源 - 生产环境
-            config.setAllowedOrigins(Arrays.asList(
-                    "http://localhost:5173",
-                    "http://127.0.0.1:5173"
-            ));
-        }
-
-        // WebSocket必要头信息
-        config.setAllowedHeaders(Arrays.asList(
-                "Authorization",
-                "Content-Type",
-                "X-Requested-With",
-                "Upgrade",          // WebSocket连接必要头
-                "Connection",       // WebSocket连接必要头
-                "Sec-WebSocket-Key",       // WebSocket握手需要
-                "Sec-WebSocket-Version",   // WebSocket握手需要
-                "Sec-WebSocket-Extensions", // WebSocket握手需要
-                "Sec-WebSocket-Protocol"   // WebSocket握手需要
-        ));
-
+        
+        // 允许更广泛的来源
+        config.addAllowedOriginPattern("*");
+        
+        // 允许所有头部（简化配置）
+        config.addAllowedHeader("*");
+        
         // 支持的方法
         config.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"
         ));
-
-        // 暴露给客户端的响应头
-        config.setExposedHeaders(Arrays.asList(
-                "Authorization",
-                "Access-Control-Allow-Origin",
-                "Access-Control-Allow-Credentials"
-        ));
-
-        // 启用凭证（允许跨域携带cookie和认证信息）
+        
+        // 启用凭证
         config.setAllowCredentials(true);
-
+        
         // 预检请求缓存时间 - 1小时
         config.setMaxAge(3600L);
-
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

@@ -13,14 +13,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableAsync 
 @SpringBootApplication
-@MapperScan("com.smartcommunity.smart_community_platform.dao") // 注意：这是唯一的Mapper扫描配置，不要在其他配置类中重复此注解
+@MapperScan("com.smartcommunity.smart_community_platform.dao")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
 public class SmartCommunityPlatformApplication {
 
     public static void main(String[] args) {
         // 允许Bean覆盖，解决WebSocket相关配置冲突
-        // 这允许 WebSocketConfig 中的配置优先于 Spring 内部默认配置
         SpringApplication application = new SpringApplication(SmartCommunityPlatformApplication.class);
         application.setAllowBeanDefinitionOverriding(true);
         application.run(args);

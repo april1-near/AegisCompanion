@@ -111,13 +111,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     // JwtAuthFilter.java 修改提取逻辑
     private String extractToken(HttpServletRequest request) {
         // WebSocket 握手请求特殊处理
-        if (request.getRequestURI().startsWith("/ws-endpoint")) {
+        if (request.getRequestURI().startsWith("/ws")) {
             String tokenParam = request.getParameter("token");
             if (StringUtils.hasText(tokenParam)) {
                 log.info("🔧 从 WebSocket 查询参数提取令牌");
                 return tokenParam;
             }
         }
+
 
         // 普通 HTTP 请求处理
         log.info("🔧 尝试从请求头提取令牌...");
