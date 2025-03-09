@@ -1,0 +1,155 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AdminController
+class Appointment
+class AppointmentController
+interface AppointmentMapper << interface >>
+class AppointmentRequestDTO
+interface AppointmentService << interface >>
+class AppointmentServiceImpl
+enum AppointmentStatusEnum << enumeration >>
+class AppointmentVO
+interface AssignmentService << interface >>
+class AssignmentServiceImpl
+interface AssignmentStrategy << interface >>
+class AssignmentStrategyImpl
+class BeanCopyUtils
+enum BlacklistReasonEnum << enumeration >>
+class BookingApproveDTO
+class BookingBlacklist
+interface BookingBlacklistMapper << interface >>
+class BookingCreateDTO
+class BookingQueryDTO
+class BookingRecordAdminVO
+class BookingRecordVO
+enum BookingStatusEnum << enumeration >>
+class BusinessException
+class CacheConfig
+class CommunityRoom
+class CommunityRoomAdminController
+interface CommunityRoomAdminService << interface >>
+class CommunityRoomAdminServiceImpl
+interface CommunityRoomMapper << interface >>
+class CustomAccessDeniedHandler
+entity CustomUserDetails << record >>
+class Doctor
+class DoctorController
+interface DoctorMapper << interface >>
+interface DoctorService << interface >>
+class DoctorServiceImpl
+class DoctorVO
+interface EnumCode << interface >>
+interface FilterService << interface >>
+class FilterServiceImpl
+class GlobalExceptionHandler
+class JsonTypeHandler
+class JwtAuthFilter
+class JwtAuthenticationException
+class JwtUtil
+class MyBatisPlusConfig
+class MyMetaObjectHandler
+class OptimisticLockException
+class PageResult<T>
+class PageUtils
+class ParkingAdminController
+class ParkingController
+class ParkingLog
+interface ParkingLogMapper << interface >>
+class ParkingOperationDetail
+class ParkingOperationDetailTypeHandler
+enum ParkingOperationType << enumeration >>
+class ParkingQueryDTO
+class ParkingReservation
+interface ParkingReservationCoreService << interface >>
+class ParkingReservationCoreServiceImpl
+interface ParkingReservationMapper << interface >>
+interface ParkingService << interface >>
+class ParkingServiceImpl
+class ParkingSpace
+interface ParkingSpaceMapper << interface >>
+enum ParkingSpaceStatus << enumeration >>
+class ParkingSpaceVO
+class PasswordChangeDTO
+class ReservationCreateDTO
+enum ReservationStatus << enumeration >>
+class ResponseResult<T>
+enum Role << enumeration >>
+interface RolePermissionService << interface >>
+class RolePermissionServiceImpl
+class RoomBooking
+class RoomBookingController
+interface RoomBookingMapper << interface >>
+interface RoomBookingService << interface >>
+class RoomBookingServiceImpl
+class RoomDetailVO
+enum RoomTypeEnum << enumeration >>
+class Schedule
+interface ScheduleMapper << interface >>
+interface ScheduleService << interface >>
+class ScheduleServiceImpl
+class ScheduleUpdateDTO
+class ScheduleVO
+class SecurityConfig
+class SecurityUtils
+class SmartCommunityPlatformApplication
+class StateMachineUtils
+enum TimeSlotStatusEnum << enumeration >>
+class TimeSlotsTypeHandler
+class User
+class UserAuthController
+class UserController
+class UserLoginDTO
+interface UserMapper << interface >>
+class UserRegisterDTO
+interface UserService << interface >>
+class UserServiceImpl
+class UserUpdateDTO
+class UserVO
+class WorkOrder
+class WorkOrderController
+class WorkOrderDTO
+enum WorkOrderEvent << enumeration >>
+class WorkOrderLog
+interface WorkOrderLogMapper << interface >>
+interface WorkOrderLogService << interface >>
+class WorkOrderLogServiceImpl
+class WorkOrderLogVO
+interface WorkOrderMapper << interface >>
+enum WorkOrderOperationType << enumeration >>
+enum WorkOrderPriority << enumeration >>
+interface WorkOrderService << interface >>
+class WorkOrderServiceImpl
+class WorkOrderStateMachineConfig
+enum WorkOrderStatus << enumeration >>
+class WorkOrderStatusUpdateDTO
+enum WorkOrderType << enumeration >>
+class WorkOrderVO
+
+AppointmentServiceImpl             -[#008200,dashed]-^  AppointmentService                
+AppointmentStatusEnum              -[#008200,dashed]-^  EnumCode                          
+AssignmentServiceImpl              -[#008200,dashed]-^  AssignmentService                 
+AssignmentStrategyImpl             -[#008200,dashed]-^  AssignmentStrategy                
+BlacklistReasonEnum                -[#008200,dashed]-^  EnumCode                          
+BookingStatusEnum                  -[#008200,dashed]-^  EnumCode                          
+CommunityRoomAdminServiceImpl      -[#008200,dashed]-^  CommunityRoomAdminService         
+DoctorServiceImpl                  -[#008200,dashed]-^  DoctorService                     
+FilterServiceImpl                  -[#008200,dashed]-^  FilterService                     
+ParkingReservationCoreServiceImpl  -[#008200,dashed]-^  ParkingReservationCoreService     
+ParkingServiceImpl                 -[#008200,dashed]-^  ParkingService                    
+ParkingSpaceStatus                 -[#008200,dashed]-^  EnumCode                          
+ReservationStatus                  -[#008200,dashed]-^  EnumCode                          
+Role                               -[#008200,dashed]-^  EnumCode                          
+RolePermissionServiceImpl          -[#008200,dashed]-^  RolePermissionService             
+RoomBookingServiceImpl             -[#008200,dashed]-^  RoomBookingService                
+ScheduleServiceImpl                -[#008200,dashed]-^  ScheduleService                   
+TimeSlotStatusEnum                 -[#008200,dashed]-^  EnumCode                          
+UserServiceImpl                    -[#008200,dashed]-^  UserService                       
+WorkOrderLogServiceImpl            -[#008200,dashed]-^  WorkOrderLogService               
+WorkOrderOperationType             -[#008200,dashed]-^  EnumCode                          
+WorkOrderPriority                  -[#008200,dashed]-^  EnumCode                          
+WorkOrderServiceImpl               -[#008200,dashed]-^  WorkOrderService                  
+@enduml
