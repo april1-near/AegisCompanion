@@ -36,31 +36,48 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final FilterService filterService;
     private final JwtUtil jwtUtil;
 
+
+    private boolean isWebSocketHandshake(HttpServletRequest request) {
+        String connectionHeader = request.getHeader("Connection");
+        String upgradeHeader = request.getHeader("Upgrade");
+        return "websocket".equalsIgnoreCase(upgradeHeader) &&
+                connectionHeader != null &&
+                connectionHeader.toLowerCase().contains("upgrade");
+    }
+
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        if (isWebSocketHandshake(request)) {
+            log.info("⏩ 跳过 WebSocket 握手请求的 JWT 验证");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
         log.info("===== 开始处理请求 =====");
         log.info("请求路径: {}", request.getRequestURI());
         log.info("请求方法: {}", request.getMethod());
 
-//        String body = request.getReader().lines().collect(Collectors.joining());
-//        log.info("原始请求体内容：{}", body);
-
-        if (isPreflightRequest(request)) {
-
-            log.info("👉 检测到预检请求（OPTIONS），设置 CORS 头并放行");
-            response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
-            response.setHeader("Access-Control-Allow-Headers", "*");
-            response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-
-            filterChain.doFilter(request, response);
-            return;
-        }
+////        String body = request.getReader().lines().collect(Collectors.joining());
+////        log.info("原始请求体内容：{}", body);
+//
+//        if (isPreflightRequest(request)) {
+////
+//            log.info("👉 检测到预检请求（OPTIONS），设置 CORS 头并放行");
+//            response.setHeader("Access-Control-Allow-Origin", "*");
+//            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+//            response.setHeader("Access-Control-Allow-Headers", "*");
+//            response.setHeader("Access-Control-Allow-Credentials", "true");
+//            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+//
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
         try {
             log.info("🔑 尝试提取并验证 JWT...");
@@ -110,15 +127,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     // JwtAuthFilter.java 修改提取逻辑
     private String extractToken(HttpServletRequest request) {
-        // WebSocket 握手请求特殊处理
-        if (request.getRequestURI().startsWith("/ws")) {
-            String tokenParam = request.getParameter("token");
-            if (StringUtils.hasText(tokenParam)) {
-                log.info("🔧 从 WebSocket 查询参数提取令牌");
-                return tokenParam;
-            }
-        }
-
 
         // 普通 HTTP 请求处理
         log.info("🔧 尝试从请求头提取令牌...");

@@ -25,6 +25,10 @@ public class SecurityConfig {
 
     // 需要放行的白名单路径
     private static final List<String> PERMIT_ALL_PATHS = Arrays.asList(
+            "/ws/**", // webSocket端点放行
+            "/topic/**",
+            "/queue/**",
+
             "/api/v1/auth/**",         // 认证接口放行（登录/注册）
             "/swagger-ui/**",          // Swagger UI 接口文档
             "/v3/api-docs/**"       // OpenAPI 描述文档
@@ -61,24 +65,43 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        
+
         // 允许更广泛的来源
         config.addAllowedOriginPattern("*");
-        
+
         // 允许所有头部（简化配置）
         config.addAllowedHeader("*");
-        
+
         // 支持的方法
         config.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"
         ));
-        
+
+//
+//        config.setAllowedOriginPatterns(Arrays.asList(
+//                "http://localhost:5173"
+////                "https://your-production-domain.com"
+//        ));
+
         // 启用凭证
         config.setAllowCredentials(true);
-        
+
+        config.setAllowedHeaders(Arrays.asList(
+                "Authorization", "Content-Type",
+                "Upgrade", "Connection",
+                "Sec-WebSocket-Key", "Sec-WebSocket-Version",
+                "Sec-WebSocket-Protocol", "Sec-WebSocket-Extensions"
+        ));
+
+        config.setExposedHeaders(Arrays.asList(
+                "Upgrade", "Connection",
+                "Sec-WebSocket-Accept",
+                "Sec-WebSocket-Protocol"
+        ));
+
         // 预检请求缓存时间 - 1小时
         config.setMaxAge(3600L);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
