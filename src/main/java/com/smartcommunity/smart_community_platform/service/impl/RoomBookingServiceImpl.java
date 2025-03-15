@@ -37,9 +37,9 @@ public class RoomBookingServiceImpl extends ServiceImpl<RoomBookingMapper, RoomB
     /**
      * 创建活动室预约申请
      *
-     * @param dto         预约请求参数
+     * @param dto 预约请求参数
      * @param currentUser 当前登录用户
-     * @return 创建成功的预约记录视图
+     * @return 创建成功预约记录视图
      */
     @Override
     @Transactional(rollbackFor = Exception.class)

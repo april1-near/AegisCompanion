@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleService {
+
     List<ScheduleVO> getFutureSchedules(Long doctorId);
 
     List<ScheduleVO> getDoctorSchedule(Long doctorId, LocalDate startDate, LocalDate endDate);

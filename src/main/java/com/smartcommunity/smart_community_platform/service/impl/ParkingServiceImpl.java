@@ -11,6 +11,10 @@ import com.smartcommunity.smart_community_platform.model.enums.ParkingSpaceStatu
 import com.smartcommunity.smart_community_platform.model.vo.ParkingSpaceVO;
 import com.smartcommunity.smart_community_platform.service.ParkingService;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -21,10 +25,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ParkingServiceImpl implements ParkingService {
-    private final ParkingSpaceMapper parkingSpaceMapper;
+    @Autowired
+    private  ParkingSpaceMapper parkingSpaceMapper;
 
     @Override
-    public List<ParkingSpaceVO> getAvailableSpaces(String zoneCode) {
+//    @Tool(description = "查询空闲的车位")
+    public List<ParkingSpaceVO> getAvailableSpaces(
+//            @ToolParam(description = "只有四个值：{A,B,C,D}")
+            String zoneCode) {
         // 参数有效性校验
         if (!isValidZoneCode(zoneCode)) {
             throw new IllegalArgumentException("无效的区域编码: " + zoneCode);
