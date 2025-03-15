@@ -32,7 +32,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final JwtUtil jwtUtil;
 
-
     /**
      * 配置消息代理
      */
@@ -73,7 +72,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Bean
     public WebSocketAuthInterceptor webSocketAuthInterceptor() {
-        return new WebSocketAuthInterceptor(jwtUtil);
+        return new WebSocketAuthInterceptor();
     }
 
 }

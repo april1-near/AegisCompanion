@@ -5,11 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public record CustomUserDetails(User user) implements UserDetails {
+public record CustomUserDetails(User user) implements UserDetails, Principal {
 
     public CustomUserDetails(User user) {
         this.user = Objects.requireNonNull(user, "用户实体不能为空");
@@ -30,5 +31,13 @@ public record CustomUserDetails(User user) implements UserDetails {
     public String getUsername() {
         return user.getUsername();
     }
+
+    @Override
+    public String getName() {
+
+        //其实是get id :)
+        return user.getId().toString();
+    }
+
 }
 

@@ -7,8 +7,14 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
@@ -24,7 +30,11 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class WebSocketAuthInterceptor extends DefaultHandshakeHandler {
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private  JwtUtil jwtUtil;
+
+    @Autowired
+    private  UserDetailsService detailsService;
     @Override
     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
         try {
@@ -38,7 +48,16 @@ public class WebSocketAuthInterceptor extends DefaultHandshakeHandler {
             Claims claims = jwtUtil.parseToken(token);
             log.info("✅ 用户 {} 通过 WebSocket 认证", claims.get("uId"));
 
-            return () -> claims.get("uId").toString();
+
+            // 加载完整的UserDetails
+            UserDetails userDetails = detailsService.loadUserByUsername(claims.getSubject());
+            // 设置SecurityContextHolder
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+            );
+
+
+            return (Principal) userDetails;
         } catch (Exception e) {
             log.error("⛔ WebSocket 握手认证失败", e);
             throw new JwtAuthenticationException("Authentication failed");

@@ -117,11 +117,6 @@ public class SecurityConfig {
         return activeProfile == null || activeProfile.contains("dev") || activeProfile.contains("local");
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserMapper userMapper) {
-        // 自定义用户加载逻辑（如数据库查询）
-        return new CustomUserDetailsService(userMapper);
-    }
 
     // 密码编码器
     @Bean
