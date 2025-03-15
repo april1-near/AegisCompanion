@@ -1,5 +1,7 @@
 package com.smartcommunity.smart_community_platform.security;
 
+import com.smartcommunity.smart_community_platform.dao.UserMapper;
+import com.smartcommunity.smart_community_platform.service.impl.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -112,6 +115,12 @@ public class SecurityConfig {
         // 可以根据环境变量、配置文件或其他方式来判断
         String activeProfile = System.getProperty("spring.profiles.active");
         return activeProfile == null || activeProfile.contains("dev") || activeProfile.contains("local");
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserMapper userMapper) {
+        // 自定义用户加载逻辑（如数据库查询）
+        return new CustomUserDetailsService(userMapper);
     }
 
     // 密码编码器

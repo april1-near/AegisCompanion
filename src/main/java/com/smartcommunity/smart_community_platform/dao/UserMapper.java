@@ -17,6 +17,10 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT * FROM `user` WHERE username = #{username} AND id = #{id}")
     User selectByUsernameAndId(@Param("username") String username, @Param("id") Long id);
 
+
+    // 方法参数直接命名为 id
+    @Select("SELECT * FROM `user` WHERE username = #{username} ")
+    User findByUsername(@Param("username") String username);
     //===========================
 
 

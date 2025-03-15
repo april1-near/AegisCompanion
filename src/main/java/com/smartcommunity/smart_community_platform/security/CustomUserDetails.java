@@ -15,8 +15,6 @@ public record CustomUserDetails(User user) implements UserDetails {
         this.user = Objects.requireNonNull(user, "用户实体不能为空");
     }
 
-
-    // ==== 关键改进点3：权限生成逻辑 ====
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String rolePrefix = user.getRole().getCode().startsWith("ROLE_") ? "" : "ROLE_";

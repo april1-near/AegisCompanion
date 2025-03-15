@@ -2,6 +2,7 @@ package com.smartcommunity.smart_community_platform.security;
 
 import com.smartcommunity.smart_community_platform.model.entity.User;
 import com.smartcommunity.smart_community_platform.service.FilterService;
+import com.smartcommunity.smart_community_platform.service.impl.CustomUserDetailsService;
 import com.smartcommunity.smart_community_platform.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -34,6 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String ROLE_PREFIX = "ROLE_";
     private final FilterService filterService;
+    private final CustomUserDetailsService detailsService;
     private final JwtUtil jwtUtil;
 
 
@@ -63,21 +66,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         log.info("请求路径: {}", request.getRequestURI());
         log.info("请求方法: {}", request.getMethod());
 
-////        String body = request.getReader().lines().collect(Collectors.joining());
-////        log.info("原始请求体内容：{}", body);
-//
-//        if (isPreflightRequest(request)) {
-////
-//            log.info("👉 检测到预检请求（OPTIONS），设置 CORS 头并放行");
-//            response.setHeader("Access-Control-Allow-Origin", "*");
-//            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
-//            response.setHeader("Access-Control-Allow-Headers", "*");
-//            response.setHeader("Access-Control-Allow-Credentials", "true");
-//            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-//
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
 
         try {
             log.info("🔑 尝试提取并验证 JWT...");
@@ -183,9 +171,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private void setSecurityContext(String username, Long id, List<String> roles) {
         log.info("🛠️ 设置用户安全上下文...");
 
-        User user = filterService.loadUserWithValidation(username, id);
+//        User user = filterService.loadUserWithValidation(username, id);
 
-        CustomUserDetails userDetails = new CustomUserDetails(user);
+        UserDetails userDetails = detailsService.loadUserByUsername(username);
+
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

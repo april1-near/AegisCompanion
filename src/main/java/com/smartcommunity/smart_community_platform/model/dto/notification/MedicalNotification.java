@@ -28,6 +28,7 @@ public class MedicalNotification extends Notification {
         notification.setTimestamp(LocalDateTime.now());
         notification.setTemplateCode("MEDICAL_" + type.getCode().toUpperCase());
         notification.setDoctorName(appointmentVO.getDoctorName());
+        notification.setAppointDate(appointmentVO.getAppointDate());
         notification.setTimeSlot(appointmentVO.getTimeSlot());
         return notification;
     }
