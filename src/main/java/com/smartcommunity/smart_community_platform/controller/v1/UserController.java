@@ -9,8 +9,6 @@ import com.smartcommunity.smart_community_platform.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +25,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') or (hasAnyRole('USER','MAINTENANCE') and #id == principal.username)")
     @Operation(summary = "获取用户详情", description = "根据用户ID查询详细信息（自动脱敏）")
     public ResponseResult<UserVO> getUserById(
-           @AuthenticationPrincipal CustomUserDetails du) {
+            @AuthenticationPrincipal CustomUserDetails du) {
         return ResponseResult.success(userService.getUserById(du.user().getId()));
     }
 

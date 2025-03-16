@@ -8,6 +8,7 @@ import com.smartcommunity.smart_community_platform.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "医生信息管理", description = "医生基本信息查询接口")
 @RequiredArgsConstructor
 public class DoctorController {
+
 
     private final DoctorService doctorService;
     private final ScheduleService scheduleService;

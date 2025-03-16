@@ -3,8 +3,6 @@ package com.smartcommunity.smart_community_platform.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.smartcommunity.smart_community_platform.model.entity.ParkingSpace;
 import com.smartcommunity.smart_community_platform.model.vo.ParkingSpaceVO;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

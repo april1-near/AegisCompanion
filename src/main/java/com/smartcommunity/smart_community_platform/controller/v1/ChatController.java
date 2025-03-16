@@ -1,70 +1,35 @@
 package com.smartcommunity.smart_community_platform.controller.v1;
 
-import com.smartcommunity.smart_community_platform.service.impl.Jake;
-import com.smartcommunity.smart_community_platform.service.impl.ParkingServiceImpl;
+import com.smartcommunity.smart_community_platform.service.impl.Joke;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.messages.SystemMessage;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.model.tool.ToolCallingChatOptions;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.tool.ToolCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Flux;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
 
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
 
 @Controller
 @Slf4j
+
 @RequiredArgsConstructor
 public class ChatController {
 
-
-    private final SimpMessagingTemplate messagingTemplate;
-    private final OpenAiChatModel chatModel;
-
-
-    private final ChatClient chatClient;
-
     @Autowired
-    public ChatController(SimpMessagingTemplate messagingTemplate,
-                          OpenAiChatModel chatModel,
-                          ChatClient.Builder chatClientBuilder,
-                          ChatMemory chatMemory) {
-        this.messagingTemplate = messagingTemplate;
-        this.chatModel =chatModel;
-        this.chatClient = chatClientBuilder.
-                defaultAdvisors(new MessageChatMemoryAdvisor(chatMemory))
-                .build();
-
-    }
+    private SimpMessagingTemplate messagingTemplate;
 
 
     @MessageMapping("/test")
     public String handleMessageUser(String message) {
         System.out.println("收到消息" + message);
         String destination = "/queue/messages";
-
-        Prompt prompt = new Prompt(List.of(
-                new SystemMessage(SYSTEM_ROLE),
-                new UserMessage(message)
-        ));
 
 
         messagingTemplate.convertAndSendToUser("TestUser",
@@ -74,7 +39,10 @@ public class ChatController {
         return "Server回应: " + message;
     }
 
-
+    @Autowired
+    private ChatClient chatClient;
+    @Autowired
+    private Joke joke;
 
     @MessageMapping("/chat.stream")
     public void handleStreamingChat(
@@ -85,96 +53,23 @@ public class ChatController {
         String destination = "/queue/ai-stream";
         log.info("收到用户 {} 的流式请求: {}", userId, message);
         String systemRole = String.format(SYSTEM_ROLE,
-                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));// 日期参数
+                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
 
 
-
-        Prompt prompt = new Prompt(
-                new SystemMessage(systemRole),
-                new UserMessage(message)
-
-        );
-
-
-        String content = chatClient.prompt(prompt)
-//        String output = chatClient.prompt(prompt)
+        String content = chatClient.prompt(message)
                 .advisors(a -> a
                         .param(CHAT_MEMORY_CONVERSATION_ID_KEY, userId)
                         .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
-                .tools(new Jake())
-                .call()
-                .content();
+                .tools(joke)
+                .call().content();
+
+        System.out.println(content);
+
+        messagingTemplate.convertAndSendToUser(userId,
+                destination, content
+        );
 
 
-//        Flux<ChatResponse> chatResponseFlux =
-
-//                (Flux<ChatResponse>) content
-//        Flux<String> output = (Flux<String>) chatResponseFlux
-//
-        messagingTemplate.convertAndSendToUser(
-                            userId,
-                            destination,
-                            content
-                    );
-//
-//        messagingTemplate.convertAndSendToUser(
-//                userId,
-//                destination,
-//                "[BLANK]"
-//        );
-
-//
-//
-//        output
-//                .filter(content -> !"[BLANK]".equals(content)) // 过滤空内容
-//                .doOnNext(content -> {
-//
-//
-//                    messagingTemplate.convertAndSendToUser(
-//                            userId,
-//                            destination,
-//                            content
-//                    );
-//                })
-//                .doOnComplete(() -> {
-//                    // 发送结束标志
-//                    messagingTemplate.convertAndSendToUser(
-//                            userId,
-//                            destination,
-//                            "[BLANK]"
-//                    );
-//                })
-//                .subscribe();
-//
-//
-
-//
-//        Flux<ChatResponse> responseFlux = chatModel.stream(prompt);
-//        responseFlux
-//                .map(chatResponse -> {
-//                    // 提取有效文本内容
-//                    AssistantMessage output = chatResponse.getResult().getOutput();
-//                    return output.getText();
-//                })
-//                .filter(content -> !"[BLANK]".equals(content)) // 过滤空内容
-//                .doOnNext(content -> {
-//                    messagingTemplate.convertAndSendToUser(
-//                            userId,
-//                            destination,
-//                            content
-//                    );
-//                })
-//                .doOnComplete(() -> {
-//                    // 发送结束标志
-//                    messagingTemplate.convertAndSendToUser(
-//                            userId,
-//                            destination,
-//                            "[BLANK]"
-//                    );
-//                })
-//                .subscribe();
-//
-//
     }
 
 

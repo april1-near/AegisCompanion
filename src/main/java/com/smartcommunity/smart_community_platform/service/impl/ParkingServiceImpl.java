@@ -11,9 +11,6 @@ import com.smartcommunity.smart_community_platform.model.enums.ParkingSpaceStatu
 import com.smartcommunity.smart_community_platform.model.vo.ParkingSpaceVO;
 import com.smartcommunity.smart_community_platform.service.ParkingService;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ParkingServiceImpl implements ParkingService {
     @Autowired
-    private  ParkingSpaceMapper parkingSpaceMapper;
+    private ParkingSpaceMapper parkingSpaceMapper;
 
     @Override
 //    @Tool(description = "查询空闲的车位")
