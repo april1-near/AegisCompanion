@@ -53,7 +53,8 @@ public class TicketController {
 
     /**
      * 开始处理工单
-     * @param ticketId 工单ID
+     *
+     * @param ticketId    工单ID
      * @param userDetails 当前登录维修人员
      * @return 空响应体
      */
@@ -152,7 +153,6 @@ public class TicketController {
         ticketService.confirmCompletion(ticketId, userDetails.user().getId());
         return ResponseResult.success();
     }
-
 
 
 }

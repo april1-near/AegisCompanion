@@ -39,7 +39,7 @@ public class RoomBookingController {
      */
     @GetMapping("/available-rooms")
     @Operation(summary = "查询可用活动室",
-            description = "根据时间查询当前可预约的活动室列表")
+            description = "查询当前可预约的活动室列表")
     public ResponseResult<List<CommunityRoom>> getAvailableRooms() {
 
         return ResponseResult.success(
@@ -93,6 +93,7 @@ public class RoomBookingController {
      * @param size        条目数量
      * @return 分页的预约记录
      */
+
     @GetMapping
     @Operation(summary = "查询预约记录",
             description = "查询当前用户的预约历史记录")

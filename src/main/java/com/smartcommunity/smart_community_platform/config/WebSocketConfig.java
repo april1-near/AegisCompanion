@@ -37,8 +37,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 启用简单内存消息代理（生产环境建议使用RabbitMQ作为外部代理）
-        registry.enableSimpleBroker("/queue", "/topic");
+        // 启用 RabbitMQ 作为外部 STOMP 代理（替代内存代理）
+        registry.enableStompBrokerRelay("/queue", "/topic")
+                .setRelayHost("localhost")          // RabbitMQ 服务器地址
+                .setRelayPort(61613)                // STOMP 协议默认端口
+                .setVirtualHost("/")                // 虚拟主机（根据实际情况配置）
+                .setClientLogin("guest")            // RabbitMQ 用户名
+                .setClientPasscode("guest");        // RabbitMQ 密码
+
         registry.setUserDestinationPrefix("/user");
 
         // 设置应用程序目标前缀

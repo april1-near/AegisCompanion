@@ -1,21 +1,27 @@
 package com.smartcommunity.smart_community_platform.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.zhipuai.ZhiPuAiChatModel;
 import org.springframework.ai.zhipuai.ZhiPuAiChatOptions;
 import org.springframework.ai.zhipuai.api.ZhiPuAiApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
+@RequiredArgsConstructor
 public class ChatConfig {
+
+    private final RedisTemplate<String, Message> redisTemplate;
 
     @Bean
     ChatMemory chatMemory() {
-        return new InMemoryChatMemory();
+        return new RedisChatMemory(redisTemplate);
+
     }
 
     ZhiPuAiApi zhipuAiApiKey = new ZhiPuAiApi(System.getenv("CHAT_API_KEY"));
@@ -28,7 +34,6 @@ public class ChatConfig {
                         .temperature(0.4)
                         .maxTokens(200)
                         .build());
-
     }
 
     @Bean
@@ -37,5 +42,6 @@ public class ChatConfig {
                 defaultAdvisors(new MessageChatMemoryAdvisor(chatMemory))
                 .build();
     }
+
 
 }
