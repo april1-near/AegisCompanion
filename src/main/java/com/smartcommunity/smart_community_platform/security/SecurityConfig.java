@@ -50,7 +50,7 @@ public class SecurityConfig {
                 // 请求授权配置
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PERMIT_ALL_PATHS.toArray(new String[0])).permitAll() // 白名单路径放行
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // 管理员接口
+                        .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN","SUPER_ADMIN") // 管理员接口
                         .requestMatchers("/api/v1/users/**").authenticated()
                         .requestMatchers("/api/v1/doctors/schedules").hasAnyRole("ADMIN", "MAINTENANCE") // 医生排班管理
                         .requestMatchers("/api/v1/doctors/**").permitAll() // 医生信息查询（公开）

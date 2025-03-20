@@ -3,6 +3,7 @@ package com.smartcommunity.smart_community_platform.controller.v1;
 import com.smartcommunity.smart_community_platform.model.dto.ScheduleUpdateDTO;
 import com.smartcommunity.smart_community_platform.model.vo.DoctorVO;
 import com.smartcommunity.smart_community_platform.model.vo.ResponseResult;
+import com.smartcommunity.smart_community_platform.model.vo.ScheduleVO;
 import com.smartcommunity.smart_community_platform.service.DoctorService;
 import com.smartcommunity.smart_community_platform.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,12 +14,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 医生信息管理控制器
  * <p>提供医生基础信息查询接口</p>
  */
 @RestController
-@RequestMapping("/api/v1/doctors")
+@RequestMapping("/api/v1/admin/doctors")
 @Tag(name = "医生信息管理", description = "医生基本信息查询接口")
 @RequiredArgsConstructor
 public class DoctorController {
@@ -26,6 +29,14 @@ public class DoctorController {
 
     private final DoctorService doctorService;
     private final ScheduleService scheduleService;
+
+
+    @GetMapping()
+    @Operation(summary = "查询医生列表", description = "获取所有在岗医生基本信息")
+    public ResponseResult<List<DoctorVO>> listAllDoctors() {
+        return ResponseResult.success(doctorService.listAllDoctors());
+    }
+
 
     /**
      * 获取医生详细信息
@@ -46,6 +57,22 @@ public class DoctorController {
             @RequestBody @Validated ScheduleUpdateDTO dto) {
         scheduleService.updateSchedule(dto);
         return ResponseResult.success("排班更新成功");
+    }
+
+
+    /**
+     * 查询医生排班表
+     *
+     * @param doctorId  医生ID
+     * @return 排班信息列表
+     */
+    @GetMapping("/schedules/{doctorId}")
+    @Operation(summary = "查询医生排班", description = "获取未来日期的医生排班表")
+    public ResponseResult<List<ScheduleVO>> getDoctorSchedule(
+            @PathVariable Long doctorId){
+        return ResponseResult.success(
+                scheduleService.getFutureSchedules(doctorId)
+        );
     }
 
 }

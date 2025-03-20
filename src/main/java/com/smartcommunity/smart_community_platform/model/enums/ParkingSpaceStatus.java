@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 
 import java.util.Arrays;
 
-// 停车位状态枚举
-// 文件：ParkingSpaceStatus.java
+
 public enum ParkingSpaceStatus implements EnumCode {
     FREE("FREE", "空闲可预约"),
     RESERVED("RESERVED", "已预约未使用"),

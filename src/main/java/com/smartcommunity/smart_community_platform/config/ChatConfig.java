@@ -1,5 +1,6 @@
 package com.smartcommunity.smart_community_platform.config;
 
+import com.smartcommunity.smart_community_platform.chatMemory.RedisChatMemory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;

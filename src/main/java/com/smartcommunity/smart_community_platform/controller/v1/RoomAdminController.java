@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smartcommunity.smart_community_platform.model.dto.BookingApproveDTO;
 import com.smartcommunity.smart_community_platform.model.dto.BookingQueryDTO;
+import com.smartcommunity.smart_community_platform.model.dto.RoomCreateDTO;
+import com.smartcommunity.smart_community_platform.model.dto.RoomUpdateDTO;
 import com.smartcommunity.smart_community_platform.model.entity.CommunityRoom;
 import com.smartcommunity.smart_community_platform.model.vo.BookingRecordAdminVO;
 import com.smartcommunity.smart_community_platform.model.vo.ResponseResult;
 import com.smartcommunity.smart_community_platform.security.CustomUserDetails;
-import com.smartcommunity.smart_community_platform.service.CommunityRoomAdminService;
+import com.smartcommunity.smart_community_platform.service.RoomAdminService;
 import com.smartcommunity.smart_community_platform.service.RoomBookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 社区活动室管理控制器
  */
@@ -25,38 +29,58 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/admin/rooms")
 @RequiredArgsConstructor
 @Tag(name = "活动室管理", description = "管理员专用活动室管理接口")
-public class CommunityRoomAdminController {
+public class RoomAdminController {
 
-    private final CommunityRoomAdminService adminService;
+    private final RoomAdminService adminService;
     private final RoomBookingService roomBookingService;
+
+
+
+    // 新增端点
+    /**
+     * 查询所有活动室
+     */
+    @GetMapping
+    @Operation(summary = "查询所有活动室",
+            description = "获取全部活动室列表（按创建时间倒序）")
+    public ResponseResult<List<CommunityRoom>> listAllRooms(
+            @AuthenticationPrincipal CustomUserDetails adminDetails) {
+        return ResponseResult.success(
+                adminService.listAllRooms(adminDetails.user())
+        );
+    }
+
+
 
     /**
      * 创建活动室
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "创建活动室", description = "需要管理员权限")
+    @Operation(summary = "创建活动室")
     public ResponseResult<Long> createRoom(
             @AuthenticationPrincipal CustomUserDetails adminDetails,
-            @RequestBody @Validated CommunityRoom room) {
+            @RequestBody @Validated RoomCreateDTO dto) {
         return ResponseResult.success(
-                adminService.createRoom(room, adminDetails.user())
+                adminService.createRoom(dto, adminDetails.user())
         );
     }
+
 
     /**
      * 更新活动室信息
      */
     @PutMapping("/{roomId}")
-    @Operation(summary = "更新活动室", description = "全量更新活动室信息")
+    @Operation(summary = "更新活动室")
     public ResponseResult<?> updateRoom(
             @AuthenticationPrincipal CustomUserDetails adminDetails,
             @PathVariable Long roomId,
-            @RequestBody @Validated CommunityRoom room) {
-        room.setId(roomId); // 确保ID一致性
-        adminService.updateRoom(room, adminDetails.user());
+            @RequestBody @Validated RoomUpdateDTO dto) {
+        dto.setId(roomId); // 绑定路径参数
+        adminService.updateRoom(dto, adminDetails.user());
         return ResponseResult.success("更新成功");
     }
+
 
     /**
      * 删除活动室
@@ -73,7 +97,7 @@ public class CommunityRoomAdminController {
     /**
      * 分页查询审批记录
      */
-    @GetMapping("/bookings")
+    @PostMapping("/bookings")
     @Operation(summary = "审批记录查询", description = "支持状态/活动室/时间范围过滤")
     public ResponseResult<IPage<BookingRecordAdminVO>> queryBookings(
             @AuthenticationPrincipal CustomUserDetails adminDetails,

@@ -94,6 +94,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
      */
     @Override
     public void checkReservationPermission(User user) {
+        if (user.isAdmin()) return;
         // 基础权限校验：用户必须启用且非管理员角色
         if (!user.isEnabled()) {
             throw new AccessDeniedException("账户已被禁用，无法预约车位");

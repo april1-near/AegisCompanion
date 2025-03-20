@@ -15,7 +15,7 @@ public class BookingApproveDTO {
     @NotNull
     private Long bookingId;
     @NotNull
-    private Boolean approved;  // 修正字段名
+    private Boolean approved;
 
     @Size(max = 500)
     private String comment;

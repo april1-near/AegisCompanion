@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TicketStateMachineService {
     @Qualifier("ticketStateMachineFactory")
     private final StateMachineFactory<TicketState, TicketEvent> stateMachineFactory;
-    private final StateMachinePersister<TicketState, TicketEvent, String> persister;
+    private final StateMachinePersister<TicketState, TicketEvent, String> persist;
 
 
     /**
@@ -43,17 +43,16 @@ public class TicketStateMachineService {
         sm.getExtendedState().getVariables().put("ticketVO",ticketVO);
         log.info("init：初始化上下文：{}", sm.getExtendedState().getVariables());
         try {
-            persister.persist(sm, ticket.getId().toString());
+            persist.persist(sm, ticket.getId().toString());
         } catch (Exception e) {
             throw new StateMachineException("状态机初始化失败", e);
         }
     }
 
-    // TicketStateMachineService.java
     public void sendEvent(Long ticketId, TicketEvent event, Long operatorId) {
         StateMachine<TicketState, TicketEvent> sm = stateMachineFactory.getStateMachine(ticketId.toString());
         try {
-            persister.restore(sm, ticketId.toString());
+            persist.restore(sm, ticketId.toString());
 
             // 防御性初始化
             if (sm.getExtendedState().getVariables() == null) {
@@ -69,7 +68,7 @@ public class TicketStateMachineService {
             );
             sm.sendEvent(message);
 
-            persister.persist(sm, ticketId.toString());
+            persist.persist(sm, ticketId.toString());
         } catch (Exception e) {
             throw new StateMachineException("状态机操作失败: " + e.getMessage(), e);
         }
@@ -81,7 +80,7 @@ public class TicketStateMachineService {
     public TicketState getCurrentState(Long ticketId) {
         StateMachine<TicketState, TicketEvent> sm = stateMachineFactory.getStateMachine(ticketId.toString());
         try {
-            persister.restore(sm, ticketId.toString());
+            persist.restore(sm, ticketId.toString());
             return sm.getState().getId();
         } catch (Exception e) {
             return TicketState.CREATED;
@@ -91,7 +90,7 @@ public class TicketStateMachineService {
     public StateMachine<TicketState, TicketEvent> getStateMachine(Long ticketId) {
         StateMachine<TicketState, TicketEvent> sm = stateMachineFactory.getStateMachine(ticketId.toString());
         try {
-            persister.restore(sm, ticketId.toString());
+            persist.restore(sm, ticketId.toString());
         } catch (Exception e) {
             throw new StateMachineException("工单状态不存在");
         }

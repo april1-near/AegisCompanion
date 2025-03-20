@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Accessors(chain = true) // ← 关键注解
+@Accessors(chain = true)
 public class UserVO {
     private Long id;
     private String username;

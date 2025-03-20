@@ -70,7 +70,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
 
         updateSpaceStatusWithLock(space, ParkingSpaceStatus.RESERVED);
 
-        logMapper.insert(buildLog(reservation, user,
+        logMapper.insert(buildLog(dto.getSpaceId(), user,
                 ParkingEventType.RESERVE,
                 ParkingSpaceStatus.FREE,
                 ParkingSpaceStatus.RESERVED,
@@ -121,7 +121,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
         ParkingSpace space = parkingSpaceMapper.selectById(reservation.getSpaceId());
         updateSpaceStatusWithLock(space, ParkingSpaceStatus.FREE);
 
-        logMapper.insert(buildLog(reservation, user,
+        logMapper.insert(buildLog(reservation.getSpaceId(), user,
                 ParkingEventType.RELEASE,
                 ParkingSpaceStatus.RESERVED,
                 ParkingSpaceStatus.FREE,
@@ -154,7 +154,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
         ParkingSpace space = parkingSpaceMapper.selectById(reservation.getSpaceId());
         updateSpaceStatusWithLock(space, ParkingSpaceStatus.OCCUPIED);
 
-        logMapper.insert(buildLog(reservation, user,
+        logMapper.insert(buildLog(reservation.getSpaceId(), user,
                 ParkingEventType.OCCUPY,
                 ParkingSpaceStatus.RESERVED,
                 ParkingSpaceStatus.OCCUPIED,
@@ -180,7 +180,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
         updateSpaceStatusWithLock(space, ParkingSpaceStatus.FREE);
 
         // 记录日志
-        logMapper.insert(buildLog(reservation, user,
+        logMapper.insert(buildLog(reservation.getSpaceId(), user,
                 ParkingEventType.RELEASE,
                 ParkingSpaceStatus.OCCUPIED,
                 ParkingSpaceStatus.FREE,
@@ -230,7 +230,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
             updateSpaceStatusWithLock(space, ParkingSpaceStatus.FREE);
 
             // 2.3 记录系统日志
-            logMapper.insert(buildLog(reservation, null,
+            logMapper.insert(buildLog(reservation.getSpaceId(), null,
                     ParkingEventType.TIMEOUT_RELEASE,
                     ParkingSpaceStatus.RESERVED,
                     ParkingSpaceStatus.FREE,
@@ -266,7 +266,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
         updateSpaceStatusWithLock(space, ParkingSpaceStatus.FREE);
 
         // 6. 记录管理员操作日志
-        logMapper.insert(buildLog(reservation, admin,
+        logMapper.insert(buildLog(spaceId, admin,
                 ParkingEventType.ADMIN_RELEASE,
                 space.getStatus(),  // 原状态
                 ParkingSpaceStatus.FREE,
@@ -286,7 +286,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
     }
 
     // 统一日志构建方法
-    private ParkingLog buildLog(ParkingReservation reservation, User user,
+    private ParkingLog buildLog(Long spaceId, User user,
                                 ParkingEventType operationType,
                                 ParkingSpaceStatus oldStatus,
                                 ParkingSpaceStatus newStatus,
@@ -296,7 +296,7 @@ public class ParkingReservationCoreServiceImpl implements ParkingReservationCore
             id = user.getId();
         }
         return new ParkingLog()
-                .setSpaceId(reservation.getSpaceId())
+                .setSpaceId(spaceId)
                 .setOperatorId(id)
                 .setOperationType(operationType)
                 .setDetail(new ParkingOperationDetail()

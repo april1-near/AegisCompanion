@@ -1,5 +1,5 @@
 // MessageRedisSerializer.java
-package com.smartcommunity.smart_community_platform.config;
+package com.smartcommunity.smart_community_platform.chatMemory;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

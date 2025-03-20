@@ -11,6 +11,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -53,29 +54,39 @@ public class ChatController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         User user = userDetails.user();
-       String  userId = user.getId().toString();
+        String userId = user.getId().toString();
         String destination = "/queue/ai-stream";
         log.info("收到用户 {} 的流式请求: {}", userId, message);
         String systemRole = String.format(SYSTEM_ROLE,
                 LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
 
 
-        String content = chatClient.prompt(message)
+
+        Flux<String> content = chatClient.prompt(message)
                 .system(systemRole)
                 .advisors(a -> a
                         .param(CHAT_MEMORY_CONVERSATION_ID_KEY, userId)
                         .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
                 .tools(toolCallingService)
-                .toolContext(Map.of("user",user))
-                .call().content();
+                .toolContext(Map.of("user", user))
+                .stream().content();
 
-        System.out.println(content);
 
-        messagingTemplate.convertAndSendToUser(userId,
-                destination, content
+        content.subscribe(
+                chunk -> {
+                    // 发送每个数据块到客户端
+                    messagingTemplate.convertAndSendToUser(userId, destination, chunk);
+                },
+                error -> {
+                    // 处理错误
+                    log.error("用户 {} 的流式请求发生错误", userId, error);
+                    messagingTemplate.convertAndSendToUser(userId, destination, "[ERROR]");
+                },
+                () -> {
+                    // 流完成时发送结束标记
+                    messagingTemplate.convertAndSendToUser(userId, destination, "[BLANK]");
+                }
         );
-
-
     }
 
 
@@ -106,7 +117,8 @@ public class ChatController {
                    【系统操作】已为您创建工单#20231125001
                    【温馨提示】维修人员将在2小时内联系您，请保持电话畅通
                    </操作>
-                6.对于需要的信息有些从历史对话中查询
+                6. 所有结果立即以友好可读的方式返回给用户
+                7.对于需要的信息优先从历史对话中查询
 
                 回复格式要求：
                 1. 用简体中文给出自然对话式回复

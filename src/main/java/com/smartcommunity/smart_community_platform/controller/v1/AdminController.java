@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-// src/main/java/com/smartcommunity/controller/AdminController.java
 @RestController
 @RequestMapping("/api/v1/admin/users")
 @RequiredArgsConstructor

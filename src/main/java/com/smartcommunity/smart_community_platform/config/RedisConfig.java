@@ -3,6 +3,7 @@ package com.smartcommunity.smart_community_platform.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.smartcommunity.smart_community_platform.chatMemory.MessageRedisSerializer;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

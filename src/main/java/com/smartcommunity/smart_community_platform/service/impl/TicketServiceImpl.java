@@ -2,6 +2,7 @@ package com.smartcommunity.smart_community_platform.service.impl;
 
 import com.smartcommunity.smart_community_platform.dao.TicketLogMapper;
 import com.smartcommunity.smart_community_platform.dao.TicketMapper;
+import com.smartcommunity.smart_community_platform.model.dto.ReviewHandleDTO;
 import com.smartcommunity.smart_community_platform.model.dto.TicketCreateDTO;
 import com.smartcommunity.smart_community_platform.model.entity.Ticket;
 import com.smartcommunity.smart_community_platform.model.entity.TicketLog;
@@ -93,25 +94,31 @@ public class TicketServiceImpl implements TicketService {
                 operatorId);
     }
 
-    /**
-     * 处理审核结果（Admin触发）
-     */
-    @Override
-    public void handleReview(Long ticketId, boolean isApproved, String remark, Long operatorId) {
-        Ticket ticket = getTicketWithLock(ticketId);
-//        validateReviewState(ticket);
 
-        TicketEvent event = isApproved ?
+    @Override
+    public List<TicketVO> getAllTickets() {
+        List<Ticket> tickets = ticketMapper.selectAllWithNames();
+        return convertToVOWithLogs(tickets);
+    }
+
+
+
+
+    @Override
+    public void handleReview(Long ticketId, ReviewHandleDTO dto, Long operatorId) {
+        Ticket ticket = getTicketWithLock(ticketId);
+        TicketEvent event = dto.getIsApproved() ?
                 TicketEvent.REVIEW_PASS :
                 TicketEvent.REVIEW_REJECT;
-
-        // 携带审核备注
         stateMachineService.getStateMachine(ticketId)
                 .sendEvent(MessageBuilder.withPayload(event)
-                        .setHeader("reviewResult", isApproved)
-                        .setHeader("logRemark", remark)
+                        .setHeader("operatorId",operatorId)
+                        .setHeader("reviewResult", dto.getIsApproved())
+                        .setHeader("logRemark", dto.getRemark())
                         .build());
     }
+
+
 
     /**
      * 用户确认完成

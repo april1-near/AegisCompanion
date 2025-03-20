@@ -1,5 +1,6 @@
 package com.smartcommunity.smart_community_platform.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smartcommunity.smart_community_platform.dao.CommunityRoomMapper;
@@ -7,43 +8,62 @@ import com.smartcommunity.smart_community_platform.dao.RoomBookingMapper;
 import com.smartcommunity.smart_community_platform.dao.UserMapper;
 import com.smartcommunity.smart_community_platform.exception.BusinessException;
 import com.smartcommunity.smart_community_platform.model.dto.BookingQueryDTO;
+import com.smartcommunity.smart_community_platform.model.dto.RoomCreateDTO;
+import com.smartcommunity.smart_community_platform.model.dto.RoomUpdateDTO;
 import com.smartcommunity.smart_community_platform.model.entity.CommunityRoom;
 import com.smartcommunity.smart_community_platform.model.entity.RoomBooking;
 import com.smartcommunity.smart_community_platform.model.entity.User;
 import com.smartcommunity.smart_community_platform.model.enums.BookingStatusEnum;
 import com.smartcommunity.smart_community_platform.model.vo.BookingRecordAdminVO;
-import com.smartcommunity.smart_community_platform.service.CommunityRoomAdminService;
+import com.smartcommunity.smart_community_platform.service.RoomAdminService;
 import com.smartcommunity.smart_community_platform.service.RolePermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CommunityRoomAdminServiceImpl implements CommunityRoomAdminService {
+public class RoomAdminServiceImpl implements RoomAdminService {
 
     private final CommunityRoomMapper communityRoomMapper;
     private final RoomBookingMapper roomBookingMapper;
     private final RolePermissionService rolePermissionService;
     private final UserMapper userMapper;
 
+
+    @Override
+    public List<CommunityRoom> listAllRooms(User admin) {
+        rolePermissionService.checkAdminPermission(admin);
+        return communityRoomMapper.selectList(
+                new QueryWrapper<CommunityRoom>().orderByDesc("create_time"));
+    }
+
+
     /**
      * 创建活动室
      *
-     * @param room  活动室数据
+     * @param dto  活动室数据
      * @param admin 操作管理员
      * @return 创建后的活动室ID
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long createRoom(CommunityRoom room, User admin) {
+    public Long createRoom(RoomCreateDTO dto, User admin) {
         rolePermissionService.checkAdminPermission(admin);
-        validateRoomUnique(room);
-
+        validateRoomUnique(dto.getRoomName());
+        CommunityRoom room = new CommunityRoom()
+                .setRoomName(dto.getRoomName())
+                .setRoomType(dto.getRoomType())
+                .setMaxCapacity(dto.getMaxCapacity())
+                .setOpenHour(dto.getOpenHour())
+                .setCloseHour(dto.getCloseHour())
+                .setIsActive(true)  // 新建默认激活
+                .setCreateTime(LocalDateTime.now());
         communityRoomMapper.insert(room);
         return room.getId();
     }
@@ -51,20 +71,26 @@ public class CommunityRoomAdminServiceImpl implements CommunityRoomAdminService 
     /**
      * 更新活动室信息
      *
-     * @param room  更新数据（需包含ID）
+     * @param dto  更新数据（需包含ID）
      * @param admin 操作管理员
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateRoom(CommunityRoom room, User admin) {
+    public void updateRoom(RoomUpdateDTO dto, User admin) {
         rolePermissionService.checkAdminPermission(admin);
-        CommunityRoom existing = getExistingRoom(room.getId());
-
-        if (!existing.getRoomName().equals(room.getRoomName())) {
-            validateRoomUnique(room);
+        CommunityRoom existing = getExistingRoom(dto.getId());
+        if (!existing.getRoomName().equals(dto.getRoomName())) {
+            validateRoomUnique(dto.getRoomName());
         }
-
-        communityRoomMapper.updateById(room);
+        CommunityRoom updateEntity = new CommunityRoom()
+                .setId(dto.getId())
+                .setRoomName(dto.getRoomName())
+                .setRoomType(dto.getRoomType())
+                .setMaxCapacity(dto.getMaxCapacity())
+                .setOpenHour(dto.getOpenHour())
+                .setCloseHour(dto.getCloseHour())
+                .setIsActive(dto.getIsActive());
+        communityRoomMapper.updateById(updateEntity);
     }
 
     /**
@@ -98,6 +124,7 @@ public class CommunityRoomAdminServiceImpl implements CommunityRoomAdminService 
     public IPage<BookingRecordAdminVO> queryBookingRecords(BookingQueryDTO query, Page<RoomBooking> page, User admin) {
         rolePermissionService.checkAdminPermission(admin);
 
+        if(query.getStatus().isEmpty())query.setStatus(null);
         return roomBookingMapper.selectAdminBookings(page, query).convert(this::buildBookingVO);
     }
 
@@ -143,8 +170,8 @@ public class CommunityRoomAdminServiceImpl implements CommunityRoomAdminService 
 
     // 以下为内部辅助方法
 
-    private void validateRoomUnique(CommunityRoom room) {
-        if (communityRoomMapper.existsByName(room.getRoomName())) {
+    private void validateRoomUnique(String roomName) {
+        if (communityRoomMapper.existsByName(roomName)) {
             throw new BusinessException("活动室名称已存在");
         }
     }

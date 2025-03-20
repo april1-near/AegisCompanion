@@ -1,6 +1,9 @@
 // 文件：ParkingAdminController.java
 package com.smartcommunity.smart_community_platform.controller.v1;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.smartcommunity.smart_community_platform.model.dto.ParkingSpaceCreateDTO;
+import com.smartcommunity.smart_community_platform.model.dto.ParkingSpaceUpdateDTO;
 import com.smartcommunity.smart_community_platform.model.entity.ParkingSpace;
 import com.smartcommunity.smart_community_platform.model.vo.ResponseResult;
 import com.smartcommunity.smart_community_platform.security.CustomUserDetails;
@@ -8,6 +11,7 @@ import com.smartcommunity.smart_community_platform.service.ParkingReservationCor
 import com.smartcommunity.smart_community_platform.service.ParkingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,7 +40,7 @@ public class ParkingAdminController {
     @PostMapping("/spaces")
     @Operation(summary = "添加车位", description = "管理员创建新的物理车位记录")
     public ResponseResult<Long> addParkingSpace(
-            @RequestBody ParkingSpace space) {
+            @RequestBody  @Valid ParkingSpaceCreateDTO space) {
         return ResponseResult.success(parkingService.addParkingSpace(space));
     }
 
@@ -50,7 +54,7 @@ public class ParkingAdminController {
      */
     @GetMapping("/spaces")
     @Operation(summary = "分页查询车位", description = "带区域过滤的分页查询")
-    public ResponseResult<?> listSpaces(
+    public ResponseResult<IPage<ParkingSpace>> listSpaces(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String zoneCode) {
@@ -66,7 +70,7 @@ public class ParkingAdminController {
     @Operation(summary = "更新车位信息", description = "修改车位状态或基础信息")
     public ResponseResult<?> updateParkingSpace(
             @PathVariable Long id,
-            @RequestBody ParkingSpace space) {
+            @RequestBody  @Valid ParkingSpaceUpdateDTO space) {
         space.setId(id); // 确保ID一致性
         parkingService.updateParkingSpace(space);
         return ResponseResult.success("更新成功");

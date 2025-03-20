@@ -6,16 +6,20 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smartcommunity.smart_community_platform.dao.ParkingSpaceMapper;
 import com.smartcommunity.smart_community_platform.exception.BusinessException;
+import com.smartcommunity.smart_community_platform.model.dto.ParkingSpaceCreateDTO;
+import com.smartcommunity.smart_community_platform.model.dto.ParkingSpaceUpdateDTO;
 import com.smartcommunity.smart_community_platform.model.entity.ParkingSpace;
 import com.smartcommunity.smart_community_platform.model.enums.ParkingSpaceStatus;
 import com.smartcommunity.smart_community_platform.model.vo.ParkingSpaceVO;
 import com.smartcommunity.smart_community_platform.service.ParkingService;
+import com.smartcommunity.smart_community_platform.utils.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,15 +49,18 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
 
-    // 新增车位（带基础校验）
     @Override
     @Transactional
-    public Long addParkingSpace(ParkingSpace space) {
-        // 校验区域编码格式
-        if (!isValidZoneCode(space.getZoneCode())) {
-            throw new BusinessException("区域编码必须为1位大写字母");
-        }
-
+    public Long addParkingSpace(ParkingSpaceCreateDTO dto) {
+        // 转换DTO到实体
+        ParkingSpace space = ParkingSpace.builder()
+                .zoneCode(dto.getZoneCode())
+                .number(dto.getNumber())
+                .status(dto.getStatus() != null ? dto.getStatus() : ParkingSpaceStatus.FREE)
+                .qrCode(dto.getQrCode())
+                .createTime(LocalDateTime.now())
+                .lastStatusTime(LocalDateTime.now())
+                .build();
         // 校验车位号重复
         LambdaQueryWrapper<ParkingSpace> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ParkingSpace::getZoneCode, space.getZoneCode())
@@ -61,10 +68,10 @@ public class ParkingServiceImpl implements ParkingService {
         if (parkingSpaceMapper.exists(wrapper)) {
             throw new BusinessException("该车位已存在");
         }
-
         parkingSpaceMapper.insert(space);
         return space.getId();
     }
+
 
     // 分页查询（带区域过滤）
     @Override
@@ -77,14 +84,24 @@ public class ParkingServiceImpl implements ParkingService {
         return parkingSpaceMapper.selectPage(page, wrapper.orderByAsc(ParkingSpace::getNumber));
     }
 
-    // 更新车位状态（带乐观锁）
     @Override
     @Transactional
-    public void updateParkingSpace(ParkingSpace space) {
-        if (parkingSpaceMapper.updateById(space) == 0) {
-            throw new BusinessException("车位信息已变更，请刷新后重试");
+    public void updateParkingSpace(ParkingSpaceUpdateDTO dto) {
+        // 转换DTO到实体（自动携带version）
+        ParkingSpace entity = new ParkingSpace();
+        BeanCopyUtils.copyNonNullProperties(dto, entity);
+
+        // 自动更新状态时间（业务逻辑）
+        if (dto.getStatus() != null) {
+            entity.setLastStatusTime(LocalDateTime.now());
+        }
+        // MP会自动添加 version 条件
+        int rows = parkingSpaceMapper.updateById(entity);
+        if (rows == 0) {
+            throw new BusinessException("数据不存在或版本已变更");
         }
     }
+
 
     // 删除车位（带关联校验）
     @Override

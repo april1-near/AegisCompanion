@@ -1,5 +1,6 @@
 package com.smartcommunity.smart_community_platform.controller.v1;
 
+import com.smartcommunity.smart_community_platform.model.dto.ReviewHandleDTO;
 import com.smartcommunity.smart_community_platform.model.dto.TicketCreateDTO;
 import com.smartcommunity.smart_community_platform.model.vo.ResponseResult;
 import com.smartcommunity.smart_community_platform.model.vo.TicketVO;
@@ -121,8 +122,7 @@ public class TicketController {
      * 处理工单审核
      *
      * @param ticketId    工单ID
-     * @param isApproved  是否通过审核
-     * @param remark      审核备注（未通过时必填）
+     * @param dto 审批说明
      * @param userDetails 当前登录管理员信息
      * @return 空响应体（成功状态码200表示操作成功）
      */
@@ -131,11 +131,17 @@ public class TicketController {
     @Operation(summary = "处理审核", description = "管理人员处理工单审核（通过/驳回）")
     public ResponseResult<Void> handleReview(
             @PathVariable Long ticketId,
-            @RequestParam boolean isApproved,
-            @RequestParam(required = false) String remark,
+            @Valid @RequestBody ReviewHandleDTO dto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        ticketService.handleReview(ticketId, isApproved, remark, userDetails.user().getId());
+        ticketService.handleReview(ticketId, dto, userDetails.user().getId());
         return ResponseResult.success();
+    }
+
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "获取所有工单", description = "管理员查看所有工单，按创建时间倒序排列")
+    public ResponseResult<List<TicketVO>> getAllTickets() {
+        return ResponseResult.success(ticketService.getAllTickets());
     }
 
     /**

@@ -53,4 +53,14 @@ public interface TicketMapper extends BaseMapper<Ticket> {
     List<Ticket> selectByAssigneeIdWithNames(@Param("assigneeId") Long assigneeId);
 
 
+    @Select("SELECT t.*, u1.username as creator_name, u2.username as assignee_name " +
+            "FROM ticket t " +
+            "LEFT JOIN user u1 ON t.user_id = u1.id " +
+            "LEFT JOIN user u2 ON t.assignee_id = u2.id " +
+            "ORDER BY t.create_time DESC")
+    List<Ticket> selectAllWithNames();
+
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.smartcommunity.smart_community_platform.service;
 
+import com.smartcommunity.smart_community_platform.model.dto.ReviewHandleDTO;
 import com.smartcommunity.smart_community_platform.model.dto.TicketCreateDTO;
 import com.smartcommunity.smart_community_platform.model.vo.TicketVO;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,10 @@ public interface TicketService {
 
     void submitForReview(Long ticketId, Long operatorId);
 
-    void handleReview(Long ticketId, boolean isApproved, String remark, Long operatorId);
+    List<TicketVO> getAllTickets();
+
+
+    void handleReview(Long ticketId, ReviewHandleDTO dto, Long operatorId);
 
     void confirmCompletion(Long ticketId, Long userId);
 

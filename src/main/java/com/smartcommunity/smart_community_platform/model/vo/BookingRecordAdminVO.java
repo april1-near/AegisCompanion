@@ -18,6 +18,6 @@ public class BookingRecordAdminVO {
     private String roomName;
     private String purpose;
     private Integer participantCount;
-    private String timeRange;        // 格式化成"2023-12-01 14:00~16:00"
+    private String timeRange;        // 已格式化成"2023-12-01 14:00~16:00"
     private String bookingStatus;
 }

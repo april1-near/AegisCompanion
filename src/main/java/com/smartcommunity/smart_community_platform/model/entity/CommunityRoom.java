@@ -25,7 +25,7 @@ public class CommunityRoom {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime closeHour;
     private Boolean isActive;
-    @JsonFormat(pattern = "YY:MM:dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createTime;
 
 }

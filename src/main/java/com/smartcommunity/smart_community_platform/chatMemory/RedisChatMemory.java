@@ -1,4 +1,4 @@
-package com.smartcommunity.smart_community_platform.config;
+package com.smartcommunity.smart_community_platform.chatMemory;
 
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
