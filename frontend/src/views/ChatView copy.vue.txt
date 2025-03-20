@@ -1,0 +1,189 @@
+<template>
+  <div class="chat-container">
+    <!-- 手动重连按钮 -->
+    <div v-if="!websocketStore.isConnected" class="reconnect">
+      <el-button type="warning" @click="handleReconnect">重新连接</el-button>
+    </div>
+
+    <!-- 消息列表区域 -->
+    <div class="message-list">
+      <div 
+        v-for="(msg, index) in chatStore.messages" 
+        :key="index" 
+        class="message-item"
+        :class="msg.role"
+      >
+        <div class="message-content">
+          <!-- 助理消息在左 -->
+          <template v-if="msg.role === 'assistant'">
+            <el-avatar class="avatar">
+              <el-icon :size="24"><ChatDotSquare /></el-icon>
+            </el-avatar>
+            <div class="bubble">
+              <el-card shadow="hover" class="card-style">
+                <div v-text="msg.content" class="message-text"></div>
+              </el-card>
+            </div>
+          </template>
+
+          <!-- 用户消息在右 -->
+          <template v-else>
+            <div class="bubble">
+              <el-card shadow="hover" class="card-style user-card">
+                <div v-text="msg.content" class="message-text"></div>
+              </el-card>
+            </div>
+            <el-avatar class="avatar">
+              <el-icon :size="24"><User /></el-icon>
+            </el-avatar>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- 输入框固定区域 -->
+    <div class="input-area">
+      <el-input class="input"
+        v-model="inputMessage"
+        :disabled="chatStore.isSending"
+        placeholder="输入消息..."
+        @keyup.enter.prevent="sendMessage"
+      >
+        <template #append>
+          <el-button 
+            type="primary" 
+            :disabled="!canSend"
+            @click="sendMessage"
+            :icon="ChatRound"
+          />
+        </template>
+      </el-input>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useChatStore } from '@/store/chatStore'
+import { useWebsocketStore } from '@/store/websocketStore'
+import { ElMessage } from 'element-plus'
+import { User, ChatDotSquare, ChatRound } from '@element-plus/icons-vue'
+
+const chatStore = useChatStore()
+const websocketStore = useWebsocketStore()
+const inputMessage = ref('')
+
+// 初始化WebSocket
+onMounted(() => {
+  if (!websocketStore.isConnected) {
+    websocketStore.connect()
+  }
+  chatStore.init()
+})
+
+// 发送消息逻辑
+const sendMessage = async () => {
+  if (!canSend.value) return
+  await chatStore.sendMessage(inputMessage.value)
+  inputMessage.value = ''
+}
+
+// 手动重连
+const handleReconnect = () => {
+  websocketStore.reconnect()
+  ElMessage.success('正在尝试重新连接...')
+}
+
+// 发送按钮状态计算
+const canSend = computed(() => {
+  return inputMessage.value.trim() && !chatStore.isSending
+})
+</script>
+
+<style>
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f5f7fa;
+}
+
+.reconnect {
+  padding: 12px;
+  background: #fffbe6;
+  text-align: center;
+}
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.message-item {
+  margin: 12px 0;
+}
+
+.message-content {
+  display: flex;
+  align-items: start;
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+.assistant .message-content {
+  justify-content: flex-start;
+}
+
+.user .message-content {
+  justify-content: flex-end;
+}
+
+.avatar {
+  flex-shrink: 0;
+  margin: 0 12px;
+  background: #409eff;
+}
+
+.bubble {
+  max-width: 70%;
+  min-width: 120px;
+}
+
+.card-style {
+  border-radius: 12px;
+  border: none;
+}
+
+.user-card {
+  background: #4d6044;
+  color: rgb(179, 238, 222);
+}
+
+.user-card .message-text {
+  color: white;
+}
+
+.message-text {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.input-area {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 20px;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.el-input-group__append {
+  background-color: deepskyblue;
+  width: 100px;
+  background: transparent !important;
+}
+
+.input {
+height: 60px;
+}
+</style>
