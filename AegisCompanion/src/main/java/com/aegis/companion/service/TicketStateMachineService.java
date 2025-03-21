@@ -40,7 +40,7 @@ public class TicketStateMachineService {
 
         TicketVO ticketVO = TicketVO.fromEntity(ticket);
         sm.getExtendedState().getVariables().put("operatorId", ticket.getUserId());
-        sm.getExtendedState().getVariables().put("ticketVO",ticketVO);
+        sm.getExtendedState().getVariables().put("ticketVO", ticketVO);
         log.info("init：初始化上下文：{}", sm.getExtendedState().getVariables());
         try {
             persist.persist(sm, ticket.getId().toString());

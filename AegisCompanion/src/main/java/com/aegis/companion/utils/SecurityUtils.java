@@ -1,8 +1,8 @@
 package com.aegis.companion.utils;
 
-import com.aegis.companion.security.CustomUserDetails;
 import com.aegis.companion.model.entity.User;
 import com.aegis.companion.model.vo.UserVO;
+import com.aegis.companion.security.CustomUserDetails;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

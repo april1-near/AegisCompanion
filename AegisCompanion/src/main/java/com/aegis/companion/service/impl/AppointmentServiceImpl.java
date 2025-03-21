@@ -1,11 +1,9 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.exception.BusinessException;
-import com.aegis.companion.service.AppointmentService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.aegis.companion.dao.AppointmentMapper;
 import com.aegis.companion.dao.DoctorMapper;
 import com.aegis.companion.dao.ScheduleMapper;
+import com.aegis.companion.exception.BusinessException;
 import com.aegis.companion.model.dto.AppointmentRequestDTO;
 import com.aegis.companion.model.entity.Appointment;
 import com.aegis.companion.model.entity.Doctor;
@@ -13,6 +11,8 @@ import com.aegis.companion.model.entity.Schedule;
 import com.aegis.companion.model.enums.AppointmentStatusEnum;
 import com.aegis.companion.model.enums.TimeSlotStatusEnum;
 import com.aegis.companion.model.vo.AppointmentVO;
+import com.aegis.companion.service.AppointmentService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +73,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional(rollbackFor = Exception.class)
     public AppointmentVO cancelAppointment(Long appointmentId, Long userId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
-        if (appointment == null)throw new BusinessException("工单不存在");
+        if (appointment == null) throw new BusinessException("工单不存在");
 
         // 校验操作权限
         if (!appointment.getUserId().equals(userId)) {

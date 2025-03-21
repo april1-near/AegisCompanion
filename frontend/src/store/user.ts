@@ -1,10 +1,7 @@
 // src/store/user.ts
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import request from '@/utils/request'
-import type { ApiResponse } from '@/types/user'
 import { useAuthStore } from './auth'
-import dayjs from 'dayjs'
 
 interface UserUpdateDTO {
   username?: string

@@ -1,9 +1,9 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.service.DoctorService;
 import com.aegis.companion.dao.DoctorMapper;
 import com.aegis.companion.model.entity.Doctor;
 import com.aegis.companion.model.vo.DoctorVO;
+import com.aegis.companion.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

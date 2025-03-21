@@ -1,15 +1,9 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.exception.BusinessException;
-import com.aegis.companion.service.RolePermissionService;
-import com.aegis.companion.service.RoomBookingService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.aegis.companion.dao.BookingBlacklistMapper;
 import com.aegis.companion.dao.CommunityRoomMapper;
 import com.aegis.companion.dao.RoomBookingMapper;
+import com.aegis.companion.exception.BusinessException;
 import com.aegis.companion.model.dto.BookingApproveDTO;
 import com.aegis.companion.model.dto.BookingCreateDTO;
 import com.aegis.companion.model.entity.CommunityRoom;
@@ -17,6 +11,12 @@ import com.aegis.companion.model.entity.RoomBooking;
 import com.aegis.companion.model.entity.User;
 import com.aegis.companion.model.enums.BookingStatusEnum;
 import com.aegis.companion.model.vo.BookingRecordVO;
+import com.aegis.companion.service.RolePermissionService;
+import com.aegis.companion.service.RoomBookingService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +37,7 @@ public class RoomBookingServiceImpl extends ServiceImpl<RoomBookingMapper, RoomB
     /**
      * 创建活动室预约申请
      *
-     * @param dto 预约请求参数
+     * @param dto         预约请求参数
      * @param currentUser 当前登录用户
      * @return 创建成功预约记录视图
      */
@@ -71,6 +71,7 @@ public class RoomBookingServiceImpl extends ServiceImpl<RoomBookingMapper, RoomB
 
     /**
      * 查询当前时段可用活动室
+     *
      * @return 可用活动室列表
      */
     @Override

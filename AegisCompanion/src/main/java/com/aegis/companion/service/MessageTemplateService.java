@@ -35,10 +35,10 @@ public class MessageTemplateService {
         put("WORK_ORDER_CLOSED", "【工单关闭】您的工单（ID：%d）已关闭\n处理人：%s");
         put("WORK_ORDER_CANCELLED", "【工单取消】%s 取消了工单（ID：%d）\n原因：%s");
         /*==================================================================*/
-        put("TICKET_AUTO_ASSIGNED","【新工单】您有新的工单待处理！工单号：{%d}，类型{%s}，提交时间{%s}");
-        put("TICKET_REVIEW_PENDING","【待审核】工单 {#%d} 已处理完毕，请及时审核。提交人：{%s}");
-        put("TICKET_REVIEW_FAILED","【需重新处理】工单 {#%d} 审核未通过，原因{%s}");
-        put("TICKET_COMPLETED","【已完成】您的工单 {%d} 已确认完成，感谢使用！");
+        put("TICKET_AUTO_ASSIGNED", "【新工单】您有新的工单待处理！工单号：{%d}，类型{%s}，提交时间{%s}");
+        put("TICKET_REVIEW_PENDING", "【待审核】工单 {#%d} 已处理完毕，请及时审核。提交人：{%s}");
+        put("TICKET_REVIEW_FAILED", "【需重新处理】工单 {#%d} 审核未通过，原因{%s}");
+        put("TICKET_COMPLETED", "【已完成】您的工单 {%d} 已确认完成，感谢使用！");
     }};
 
     public String getTemplate(String code) {

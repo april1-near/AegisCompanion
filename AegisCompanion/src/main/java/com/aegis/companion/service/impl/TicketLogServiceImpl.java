@@ -1,10 +1,10 @@
 package com.aegis.companion.service.impl;
 
 
-import com.aegis.companion.service.TicketLogService;
 import com.aegis.companion.dao.TicketLogMapper;
 import com.aegis.companion.model.entity.TicketLog;
 import com.aegis.companion.model.enums.TicketState;
+import com.aegis.companion.service.TicketLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

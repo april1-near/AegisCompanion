@@ -2,7 +2,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import request from '@/utils/request'
-import type { User } from '@/types/user'
 
 export interface Ticket {
   id: string

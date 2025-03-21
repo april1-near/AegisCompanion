@@ -61,6 +61,4 @@ public interface TicketMapper extends BaseMapper<Ticket> {
     List<Ticket> selectAllWithNames();
 
 
-
-
 }

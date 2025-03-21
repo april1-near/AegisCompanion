@@ -51,7 +51,8 @@ public class JsonTypeHandler extends BaseTypeHandler<List<String>> {
             return new ArrayList<>();
         }
         try {
-            return mapper.readValue(json, new TypeReference<List<String>>() {});
+            return mapper.readValue(json, new TypeReference<List<String>>() {
+            });
         } catch (Exception e) {
             log.error("JSON解析失败，原始内容：{}", json, e);
             return new ArrayList<>();

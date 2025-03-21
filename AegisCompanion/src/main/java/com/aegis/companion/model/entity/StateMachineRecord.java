@@ -1,9 +1,9 @@
 package com.aegis.companion.model.entity;
 
 
+import com.aegis.companion.model.enums.TicketState;
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.aegis.companion.model.enums.TicketState;
 import lombok.Data;
 
 import java.time.LocalDateTime;

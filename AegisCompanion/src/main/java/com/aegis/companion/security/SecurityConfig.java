@@ -21,8 +21,6 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthFilter jwtAuthFilter;
-
     // 需要放行的白名单路径
     private static final List<String> PERMIT_ALL_PATHS = Arrays.asList(
             "/ws/**", // webSocket端点放行
@@ -33,6 +31,7 @@ public class SecurityConfig {
             "/swagger-ui/**",          // Swagger UI 接口文档
             "/v3/api-docs/**"       // OpenAPI 描述文档
     );
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,7 +46,7 @@ public class SecurityConfig {
                 // 请求授权配置
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PERMIT_ALL_PATHS.toArray(new String[0])).permitAll() // 白名单路径放行
-                        .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN","SUPER_ADMIN") // 管理员接口
+                        .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN") // 管理员接口
                         .requestMatchers("/api/v1/users/**").authenticated()
                         .requestMatchers("/api/v1/doctors/schedules").hasAnyRole("ADMIN", "MAINTENANCE") // 医生排班管理
                         .requestMatchers("/api/v1/doctors/**").permitAll() // 医生信息查询（公开）

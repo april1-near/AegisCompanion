@@ -1,8 +1,8 @@
 package com.aegis.companion.model.entity;
 
+import com.aegis.companion.model.enums.ParkingSpaceStatus;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.aegis.companion.model.enums.ParkingSpaceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

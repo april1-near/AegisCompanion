@@ -19,6 +19,7 @@ public interface CommunityRoomMapper extends BaseMapper<CommunityRoom> {
 
     @Update("UPDATE `community_room` SET is_active = #{active} WHERE id = #{roomId}")
     int updateStatus(@Param("roomId") Long roomId, @Param("active") boolean active);
+
     @Select("SELECT * FROM community_room WHERE is_active = 1 ")
     List<CommunityRoom> selectAvailableRooms();
 

@@ -62,13 +62,13 @@ public class DoctorController {
     /**
      * 查询医生排班表
      *
-     * @param doctorId  医生ID
+     * @param doctorId 医生ID
      * @return 排班信息列表
      */
     @GetMapping("/schedules/{doctorId}")
     @Operation(summary = "查询医生排班", description = "获取未来日期的医生排班表")
     public ResponseResult<List<ScheduleVO>> getDoctorSchedule(
-            @PathVariable Long doctorId){
+            @PathVariable Long doctorId) {
         return ResponseResult.success(
                 scheduleService.getFutureSchedules(doctorId)
         );

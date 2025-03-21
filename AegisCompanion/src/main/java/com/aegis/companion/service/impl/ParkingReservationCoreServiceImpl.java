@@ -1,15 +1,10 @@
 package com.aegis.companion.service.impl;
 // 新增预约核心业务逻辑类
 
-import com.aegis.companion.exception.BusinessException;
-import com.aegis.companion.service.ParkingReservationCoreService;
-import com.aegis.companion.service.RolePermissionService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.aegis.companion.dao.ParkingLogMapper;
 import com.aegis.companion.dao.ParkingReservationMapper;
 import com.aegis.companion.dao.ParkingSpaceMapper;
+import com.aegis.companion.exception.BusinessException;
 import com.aegis.companion.model.dto.ParkingOperationDetail;
 import com.aegis.companion.model.dto.ReservationCreateDTO;
 import com.aegis.companion.model.entity.ParkingLog;
@@ -19,6 +14,11 @@ import com.aegis.companion.model.entity.User;
 import com.aegis.companion.model.enums.ParkingEventType;
 import com.aegis.companion.model.enums.ParkingSpaceStatus;
 import com.aegis.companion.model.enums.ReservationStatus;
+import com.aegis.companion.service.ParkingReservationCoreService;
+import com.aegis.companion.service.RolePermissionService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

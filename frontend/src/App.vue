@@ -1,9 +1,17 @@
+<!-- App.vue -->
 <script setup lang="ts">
 </script>
+
 <template>
-  <router-view></router-view>
+  <div class="app-container">
+    <router-view></router-view>
+  </div>
 </template>
 
 <style scoped>
-
+/* .app-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+} */
 </style>

@@ -1,8 +1,8 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.security.CustomUserDetails;
 import com.aegis.companion.dao.UserMapper;
 import com.aegis.companion.model.entity.User;
+import com.aegis.companion.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userMapper.findByUsername(username);
 
-        if (user==null) throw new UsernameNotFoundException("用户不存在"+username);
+        if (user == null) throw new UsernameNotFoundException("用户不存在" + username);
 
         // 2. 封装为UserDetails对象
         return new CustomUserDetails(user);

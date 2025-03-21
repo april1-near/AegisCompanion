@@ -1,12 +1,8 @@
 package com.aegis.companion.service.impl;
 
+import com.aegis.companion.dao.UserMapper;
 import com.aegis.companion.exception.BusinessException;
 import com.aegis.companion.exception.OptimisticLockException;
-import com.aegis.companion.service.RolePermissionService;
-import com.aegis.companion.service.UserService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.aegis.companion.dao.UserMapper;
 import com.aegis.companion.model.dto.UserLoginDTO;
 import com.aegis.companion.model.dto.UserRegisterDTO;
 import com.aegis.companion.model.dto.UserUpdateDTO;
@@ -14,10 +10,14 @@ import com.aegis.companion.model.entity.User;
 import com.aegis.companion.model.enums.Role;
 import com.aegis.companion.model.vo.PageResult;
 import com.aegis.companion.model.vo.UserVO;
+import com.aegis.companion.service.RolePermissionService;
+import com.aegis.companion.service.UserService;
 import com.aegis.companion.utils.BeanCopyUtils;
 import com.aegis.companion.utils.JwtUtil;
 import com.aegis.companion.utils.PageUtils;
 import com.aegis.companion.utils.SecurityUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;

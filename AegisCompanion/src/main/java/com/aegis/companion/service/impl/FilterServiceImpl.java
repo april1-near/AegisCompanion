@@ -1,8 +1,8 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.service.FilterService;
 import com.aegis.companion.dao.UserMapper;
 import com.aegis.companion.model.entity.User;
+import com.aegis.companion.service.FilterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

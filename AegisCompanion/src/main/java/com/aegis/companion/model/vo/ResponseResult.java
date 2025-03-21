@@ -22,6 +22,7 @@ public class ResponseResult<T> {
                 .data(data)
                 .build();
     }
+
     public static <T> ResponseResult<T> success() {
         return ResponseResult.<T>builder()
                 .code(200)

@@ -26,70 +26,6 @@ import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvis
 @RequiredArgsConstructor
 public class ChatController {
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-
-    @MessageMapping("/test")
-    public String handleMessageUser(String message) {
-        System.out.println("收到消息" + message);
-        String destination = "/queue/messages";
-
-
-        messagingTemplate.convertAndSendToUser("TestUser",
-                destination, "Server回应:" + message
-        );
-
-        return "Server回应: " + message;
-    }
-
-    @Autowired
-    private ChatClient chatClient;
-    @Autowired
-    private ChatToolCallingService toolCallingService;
-
-    @MessageMapping("/chat.stream")
-    public void handleStreamingChat(
-            String message,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        User user = userDetails.user();
-        String userId = user.getId().toString();
-        String destination = "/queue/ai-stream";
-        log.info("收到用户 {} 的流式请求: {}", userId, message);
-        String systemRole = String.format(SYSTEM_ROLE,
-                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
-
-
-
-        Flux<String> content = chatClient.prompt(message)
-                .system(systemRole)
-                .advisors(a -> a
-                        .param(CHAT_MEMORY_CONVERSATION_ID_KEY, userId)
-                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
-                .tools(toolCallingService)
-                .toolContext(Map.of("user", user))
-                .stream().content();
-
-
-        content.subscribe(
-                chunk -> {
-                    // 发送每个数据块到客户端
-                    messagingTemplate.convertAndSendToUser(userId, destination, chunk);
-                },
-                error -> {
-                    // 处理错误
-                    log.error("用户 {} 的流式请求发生错误", userId, error);
-                    messagingTemplate.convertAndSendToUser(userId, destination, "[ERROR]");
-                },
-                () -> {
-                    // 流完成时发送结束标记
-                    messagingTemplate.convertAndSendToUser(userId, destination, "[BLANK]");
-                }
-        );
-    }
-
-
     public final String SYSTEM_ROLE = """
                 你作为翻斗社区系统的智能客服，需要通过在线聊天为客户提供以下四个模块的服务：
                 
@@ -133,4 +69,63 @@ public class ChatController {
 
                 </output>
             """;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private ChatClient chatClient;
+    @Autowired
+    private ChatToolCallingService toolCallingService;
+
+    @MessageMapping("/test")
+    public String handleMessageUser(String message) {
+        System.out.println("收到消息" + message);
+        String destination = "/queue/messages";
+
+
+        messagingTemplate.convertAndSendToUser("TestUser",
+                destination, "Server回应:" + message
+        );
+
+        return "Server回应: " + message;
+    }
+
+    @MessageMapping("/chat.stream")
+    public void handleStreamingChat(
+            String message,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        User user = userDetails.user();
+        String userId = user.getId().toString();
+        String destination = "/queue/ai-stream";
+        log.info("收到用户 {} 的流式请求: {}", userId, message);
+        String systemRole = String.format(SYSTEM_ROLE,
+                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
+
+
+        Flux<String> content = chatClient.prompt(message)
+                .system(systemRole)
+                .advisors(a -> a
+                        .param(CHAT_MEMORY_CONVERSATION_ID_KEY, userId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
+                .tools(toolCallingService)
+                .toolContext(Map.of("user", user))
+                .stream().content();
+
+
+        content.subscribe(
+                chunk -> {
+                    // 发送每个数据块到客户端
+                    messagingTemplate.convertAndSendToUser(userId, destination, chunk);
+                },
+                error -> {
+                    // 处理错误
+                    log.error("用户 {} 的流式请求发生错误", userId, error);
+                    messagingTemplate.convertAndSendToUser(userId, destination, "[ERROR]");
+                },
+                () -> {
+                    // 流完成时发送结束标记
+                    messagingTemplate.convertAndSendToUser(userId, destination, "[BLANK]");
+                }
+        );
+    }
 }

@@ -5,8 +5,8 @@
 
     <update id="updateStatusWithLock">
         UPDATE parking_space
-        SET status = #{newStatus},
-            version = version + 1,
+        SET status           = #{newStatus},
+            version          = version + 1,
             last_status_time = NOW()
         WHERE id = #{spaceId}
           AND version = #{oldVersion}

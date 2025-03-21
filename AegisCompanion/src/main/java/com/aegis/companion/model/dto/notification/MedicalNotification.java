@@ -1,8 +1,8 @@
 package com.aegis.companion.model.dto.notification;
 
 import com.aegis.companion.model.enums.MedicalEventType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.aegis.companion.model.vo.AppointmentVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

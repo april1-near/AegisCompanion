@@ -1,8 +1,8 @@
 package com.aegis.companion.model.dto.notification;
 
 import com.aegis.companion.model.enums.TicketState;
-import com.aegis.companion.utils.BeanCopyUtils;
 import com.aegis.companion.model.vo.TicketVO;
+import com.aegis.companion.utils.BeanCopyUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

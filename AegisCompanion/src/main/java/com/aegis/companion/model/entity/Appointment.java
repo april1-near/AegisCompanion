@@ -1,10 +1,10 @@
 package com.aegis.companion.model.entity;
 
+import com.aegis.companion.model.enums.AppointmentStatusEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.aegis.companion.model.enums.AppointmentStatusEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.EnumTypeHandler;

@@ -1,14 +1,9 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.exception.BusinessException;
-import com.aegis.companion.service.RolePermissionService;
-import com.aegis.companion.service.RoomAdminService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.aegis.companion.dao.CommunityRoomMapper;
 import com.aegis.companion.dao.RoomBookingMapper;
 import com.aegis.companion.dao.UserMapper;
+import com.aegis.companion.exception.BusinessException;
 import com.aegis.companion.model.dto.BookingQueryDTO;
 import com.aegis.companion.model.dto.RoomCreateDTO;
 import com.aegis.companion.model.dto.RoomUpdateDTO;
@@ -17,6 +12,11 @@ import com.aegis.companion.model.entity.RoomBooking;
 import com.aegis.companion.model.entity.User;
 import com.aegis.companion.model.enums.BookingStatusEnum;
 import com.aegis.companion.model.vo.BookingRecordAdminVO;
+import com.aegis.companion.service.RolePermissionService;
+import com.aegis.companion.service.RoomAdminService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ public class RoomAdminServiceImpl implements RoomAdminService {
     /**
      * 创建活动室
      *
-     * @param dto  活动室数据
+     * @param dto   活动室数据
      * @param admin 操作管理员
      * @return 创建后的活动室ID
      */
@@ -71,7 +71,7 @@ public class RoomAdminServiceImpl implements RoomAdminService {
     /**
      * 更新活动室信息
      *
-     * @param dto  更新数据（需包含ID）
+     * @param dto   更新数据（需包含ID）
      * @param admin 操作管理员
      */
     @Override
@@ -124,7 +124,7 @@ public class RoomAdminServiceImpl implements RoomAdminService {
     public IPage<BookingRecordAdminVO> queryBookingRecords(BookingQueryDTO query, Page<RoomBooking> page, User admin) {
         rolePermissionService.checkAdminPermission(admin);
 
-        if(query.getStatus().isEmpty())query.setStatus(null);
+        if (query.getStatus().isEmpty()) query.setStatus(null);
         return roomBookingMapper.selectAdminBookings(page, query).convert(this::buildBookingVO);
     }
 

@@ -18,14 +18,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class ChatConfig {
 
     private final RedisTemplate<String, Message> redisTemplate;
+    ZhiPuAiApi zhipuAiApiKey = new ZhiPuAiApi(System.getenv("CHAT_API_KEY"));
 
     @Bean
     ChatMemory chatMemory() {
         return new RedisChatMemory(redisTemplate);
 
     }
-
-    ZhiPuAiApi zhipuAiApiKey = new ZhiPuAiApi(System.getenv("CHAT_API_KEY"));
 
     @Bean
     ZhiPuAiChatModel zhiPuAiChatModel() {

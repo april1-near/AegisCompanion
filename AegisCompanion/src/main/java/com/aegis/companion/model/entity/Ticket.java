@@ -1,7 +1,7 @@
 package com.aegis.companion.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
 import com.aegis.companion.model.enums.TicketState;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import org.apache.ibatis.type.EnumTypeHandler;
 

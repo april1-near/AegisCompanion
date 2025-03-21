@@ -1,9 +1,9 @@
 package com.aegis.companion.model.entity;
 
+import com.aegis.companion.model.enums.RoomTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.aegis.companion.model.enums.RoomTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.EnumTypeHandler;

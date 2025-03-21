@@ -1,9 +1,9 @@
 // ParkingOperationDetailTypeHandler.java
 package com.aegis.companion.utils;
 
+import com.aegis.companion.model.dto.ParkingOperationDetail;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.aegis.companion.model.dto.ParkingOperationDetail;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 

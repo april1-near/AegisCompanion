@@ -3,7 +3,6 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { useAuthStore } from '@/store/auth'
 import mainLayout from '@/layouts/MainLayout.vue'
-import webscoket from '@/components/testmessage.vue'
 
 
 export const router = createRouter({
@@ -90,12 +89,6 @@ export const router = createRouter({
       meta: { guestOnly: true }
     },
 
-    {
-      path: '/test',
-      name: 'test',
-      component: webscoket,
-      meta: { test: true }
-    },
 
     {
       path: '/admin',
@@ -164,7 +157,7 @@ export const router = createRouter({
 
 
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   const store = useAuthStore()
 
 

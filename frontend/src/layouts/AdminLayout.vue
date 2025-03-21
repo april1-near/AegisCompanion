@@ -106,11 +106,8 @@ import {
     User,
     FirstAidKit,
     Opportunity,
-    Calendar,
     DocumentChecked,
     SwitchButton,
-    Expand,
-    Fold,
     UserFilled
 } from '@element-plus/icons-vue'
 

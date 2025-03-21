@@ -1,7 +1,6 @@
 // 文件：ParkingAdminController.java
 package com.aegis.companion.controller.v1;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.aegis.companion.model.dto.ParkingSpaceCreateDTO;
 import com.aegis.companion.model.dto.ParkingSpaceUpdateDTO;
 import com.aegis.companion.model.entity.ParkingSpace;
@@ -9,6 +8,7 @@ import com.aegis.companion.model.vo.ResponseResult;
 import com.aegis.companion.security.CustomUserDetails;
 import com.aegis.companion.service.ParkingReservationCoreService;
 import com.aegis.companion.service.ParkingService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -40,7 +40,7 @@ public class ParkingAdminController {
     @PostMapping("/spaces")
     @Operation(summary = "添加车位", description = "管理员创建新的物理车位记录")
     public ResponseResult<Long> addParkingSpace(
-            @RequestBody  @Valid ParkingSpaceCreateDTO space) {
+            @RequestBody @Valid ParkingSpaceCreateDTO space) {
         return ResponseResult.success(parkingService.addParkingSpace(space));
     }
 
@@ -70,7 +70,7 @@ public class ParkingAdminController {
     @Operation(summary = "更新车位信息", description = "修改车位状态或基础信息")
     public ResponseResult<?> updateParkingSpace(
             @PathVariable Long id,
-            @RequestBody  @Valid ParkingSpaceUpdateDTO space) {
+            @RequestBody @Valid ParkingSpaceUpdateDTO space) {
         space.setId(id); // 确保ID一致性
         parkingService.updateParkingSpace(space);
         return ResponseResult.success("更新成功");

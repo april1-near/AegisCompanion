@@ -2,6 +2,7 @@ package com.aegis.companion.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+
 import javax.validation.constraints.NotNull;
 
 @Data

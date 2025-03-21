@@ -1,7 +1,5 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.service.TicketService;
-import com.aegis.companion.service.TicketStateMachineService;
 import com.aegis.companion.dao.TicketLogMapper;
 import com.aegis.companion.dao.TicketMapper;
 import com.aegis.companion.model.dto.ReviewHandleDTO;
@@ -12,6 +10,8 @@ import com.aegis.companion.model.enums.TicketEvent;
 import com.aegis.companion.model.enums.TicketState;
 import com.aegis.companion.model.vo.TicketLogVO;
 import com.aegis.companion.model.vo.TicketVO;
+import com.aegis.companion.service.TicketService;
+import com.aegis.companion.service.TicketStateMachineService;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.messaging.support.MessageBuilder;
@@ -58,7 +58,8 @@ public class TicketServiceImpl implements TicketService {
 
     /**
      * 工人开始处理
-     * @param ticketId 工单id
+     *
+     * @param ticketId   工单id
      * @param operatorId 操作人
      */
 
@@ -70,7 +71,7 @@ public class TicketServiceImpl implements TicketService {
         if (!Objects.equals(ticket.getAssigneeId(), operatorId)) {
             throw new SecurityException("仅分配人员可操作此工单");
         }
-        validateState(ticket,TicketState.AUTO_ASSIGNED);
+        validateState(ticket, TicketState.AUTO_ASSIGNED);
 
         // 发送状态机事件
         stateMachineService.sendEvent(
@@ -102,8 +103,6 @@ public class TicketServiceImpl implements TicketService {
     }
 
 
-
-
     @Override
     public void handleReview(Long ticketId, ReviewHandleDTO dto, Long operatorId) {
         Ticket ticket = getTicketWithLock(ticketId);
@@ -112,12 +111,11 @@ public class TicketServiceImpl implements TicketService {
                 TicketEvent.REVIEW_REJECT;
         stateMachineService.getStateMachine(ticketId)
                 .sendEvent(MessageBuilder.withPayload(event)
-                        .setHeader("operatorId",operatorId)
+                        .setHeader("operatorId", operatorId)
                         .setHeader("reviewResult", dto.getIsApproved())
                         .setHeader("logRemark", dto.getRemark())
                         .build());
     }
-
 
 
     /**

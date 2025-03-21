@@ -1,7 +1,6 @@
 package com.aegis.companion.service;
 
 import com.aegis.companion.model.dto.notification.*;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

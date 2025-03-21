@@ -1,6 +1,7 @@
+// src/store/admin/parking.ts
 import { defineStore } from 'pinia'
 import service from '@/utils/request'
-import type { ParkingSpace, ParkingSpaceCreateDTO, ParkingSpaceUpdateDTO } from '@/types/parking'
+import type { ParkingSpace, ParkingSpaceCreateDTO, ParkingSpaceUpdateDTO, ParkingStatus } from '@/types/parking.d'
 
 interface ParkingState {
   allSpaces: ParkingSpace[]
@@ -28,7 +29,10 @@ export const useParkingManageStore = defineStore('parkingManage', {
         const response = await service.get('/admin/parking/spaces', {
           params: { pageNum: 1, pageSize: 1000 }
         })
-        this.allSpaces = response.data.records
+        this.allSpaces = response.data.records.map((item: ParkingSpace) => ({
+          ...item,
+          status: item.status.toUpperCase() as ParkingStatus  
+        }))
         this.applyFilter()
       } finally {
         this.loading = false
@@ -46,7 +50,7 @@ export const useParkingManageStore = defineStore('parkingManage', {
 
     updatePagination() {
       const start = (this.currentPage - 1) * this.pageSize
-      this.filteredSpaces = this.filteredSpaces.slice(start, start + this.pageSize)
+      this.filteredSpaces = this.allSpaces.slice(start, start + this.pageSize)
     },
 
     async addSpace(dto: ParkingSpaceCreateDTO) {

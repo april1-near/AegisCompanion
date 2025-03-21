@@ -35,7 +35,7 @@ public class UserAuthController {
     public ResponseResult<Map<String, String>> login(@Valid @RequestBody UserLoginDTO dto) {
         String tokenStr = userService.login(dto);
         Map<String, String> tokenReq = new HashMap<>();
-        tokenReq.put("token",tokenStr);
+        tokenReq.put("token", tokenStr);
         return ResponseResult.success(tokenReq);
     }
 }

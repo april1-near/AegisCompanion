@@ -1,6 +1,5 @@
 package com.aegis.companion.controller.v1;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.aegis.companion.model.dto.BookingCreateDTO;
 import com.aegis.companion.model.entity.CommunityRoom;
 import com.aegis.companion.model.entity.RoomBooking;
@@ -8,6 +7,7 @@ import com.aegis.companion.model.vo.BookingRecordVO;
 import com.aegis.companion.model.vo.ResponseResult;
 import com.aegis.companion.security.CustomUserDetails;
 import com.aegis.companion.service.RoomBookingService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +33,7 @@ public class RoomBookingController {
 
     /**
      * 获取当前可用活动室列表
+     *
      * @return 可用活动室列表
      */
     @GetMapping("/available-rooms")

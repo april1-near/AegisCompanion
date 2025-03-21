@@ -1,13 +1,13 @@
 package com.aegis.companion.config.TicketSTateMachine;
 
-import com.aegis.companion.service.AllocationService;
-import com.aegis.companion.service.TicketLogService;
 import com.aegis.companion.dao.TicketMapper;
 import com.aegis.companion.model.dto.notification.TicketNotification;
 import com.aegis.companion.model.entity.Ticket;
 import com.aegis.companion.model.enums.TicketEvent;
 import com.aegis.companion.model.enums.TicketState;
 import com.aegis.companion.model.vo.TicketVO;
+import com.aegis.companion.service.AllocationService;
+import com.aegis.companion.service.TicketLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -86,7 +86,7 @@ public class TicketStateMachineListener
                         TicketNotification.build(to, ticketVO)
                 );
 
-                if (to!= TicketState.AUTO_ASSIGNED)handTicketUpdateStatus(ticket, to);
+                if (to != TicketState.AUTO_ASSIGNED) handTicketUpdateStatus(ticket, to);
 
                 // 新增工单完成时负载处理
                 handleWorkloadAdjustment(stateContext);

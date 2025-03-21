@@ -122,7 +122,7 @@ public class TicketController {
      * 处理工单审核
      *
      * @param ticketId    工单ID
-     * @param dto 审批说明
+     * @param dto         审批说明
      * @param userDetails 当前登录管理员信息
      * @return 空响应体（成功状态码200表示操作成功）
      */

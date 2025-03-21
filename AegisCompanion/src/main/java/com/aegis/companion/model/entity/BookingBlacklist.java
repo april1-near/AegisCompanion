@@ -1,10 +1,10 @@
 package com.aegis.companion.model.entity;
 
+import com.aegis.companion.model.enums.BlacklistReasonEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.aegis.companion.model.enums.BlacklistReasonEnum;
 import lombok.Data;
 import org.apache.ibatis.type.EnumTypeHandler;
 

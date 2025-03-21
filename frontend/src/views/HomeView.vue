@@ -71,7 +71,6 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useAuthStore } from '@/store/auth'
 import { useUserStore } from '@/store/user'
-import type { FormInstance } from 'element-plus'
 
 const authStore = useAuthStore()
 const userStore = useUserStore()

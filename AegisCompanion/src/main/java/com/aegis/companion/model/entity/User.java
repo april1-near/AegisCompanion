@@ -1,8 +1,8 @@
 package com.aegis.companion.model.entity;
 
+import com.aegis.companion.model.enums.Role;
 import com.aegis.companion.utils.JsonTypeHandler;
 import com.baomidou.mybatisplus.annotation.*;
-import com.aegis.companion.model.enums.Role;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.EnumTypeHandler;

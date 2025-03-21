@@ -1,13 +1,13 @@
 package com.aegis.companion.model.entity;
 
 
+import com.aegis.companion.model.enums.TimeSlotStatusEnum;
 import com.aegis.companion.utils.TimeSlotsTypeHandler;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.aegis.companion.model.enums.TimeSlotStatusEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

@@ -1,7 +1,5 @@
 package com.aegis.companion.controller.v1;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.aegis.companion.model.dto.BookingApproveDTO;
 import com.aegis.companion.model.dto.BookingQueryDTO;
 import com.aegis.companion.model.dto.RoomCreateDTO;
@@ -12,6 +10,8 @@ import com.aegis.companion.model.vo.ResponseResult;
 import com.aegis.companion.security.CustomUserDetails;
 import com.aegis.companion.service.RoomAdminService;
 import com.aegis.companion.service.RoomBookingService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +35,8 @@ public class RoomAdminController {
     private final RoomBookingService roomBookingService;
 
 
-
     // 新增端点
+
     /**
      * 查询所有活动室
      */
@@ -49,7 +49,6 @@ public class RoomAdminController {
                 adminService.listAllRooms(adminDetails.user())
         );
     }
-
 
 
     /**

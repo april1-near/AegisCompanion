@@ -1,14 +1,14 @@
 package com.aegis.companion.service.impl;
 
-import com.aegis.companion.exception.BusinessException;
-import com.aegis.companion.exception.OptimisticLockException;
-import com.aegis.companion.service.AllocationService;
 import com.aegis.companion.dao.TicketMapper;
 import com.aegis.companion.dao.TicketTypeSkillMapper;
 import com.aegis.companion.dao.UserMapper;
+import com.aegis.companion.exception.BusinessException;
+import com.aegis.companion.exception.OptimisticLockException;
 import com.aegis.companion.model.entity.Ticket;
 import com.aegis.companion.model.entity.User;
 import com.aegis.companion.model.enums.TicketState;
+import com.aegis.companion.service.AllocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;

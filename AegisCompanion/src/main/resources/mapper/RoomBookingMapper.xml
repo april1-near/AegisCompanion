@@ -5,7 +5,8 @@
 <mapper namespace="com.aegis.companion.dao.RoomBookingMapper">
 
     <select id="countTimeConflict" resultType="int">
-        SELECT COUNT(*) FROM room_booking
+        SELECT COUNT(*)
+        FROM room_booking
         WHERE room_id = #{roomId}
           AND booking_status IN ('PENDING', 'APPROVED')
           AND NOT (end_time &lt;= #{start} OR start_time &gt;= #{end})

@@ -29,10 +29,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WebSocketAuthInterceptor extends DefaultHandshakeHandler {
     @Autowired
-    private  JwtUtil jwtUtil;
+    private JwtUtil jwtUtil;
 
     @Autowired
-    private  UserDetailsService detailsService;
+    private UserDetailsService detailsService;
+
     @Override
     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
         try {

@@ -1,8 +1,5 @@
 package com.aegis.companion.service;
 
-import com.aegis.companion.model.vo.*;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.aegis.companion.model.dto.AppointmentRequestDTO;
 import com.aegis.companion.model.dto.BookingCreateDTO;
 import com.aegis.companion.model.dto.ReservationCreateDTO;
@@ -11,6 +8,9 @@ import com.aegis.companion.model.entity.CommunityRoom;
 import com.aegis.companion.model.entity.ParkingReservation;
 import com.aegis.companion.model.entity.RoomBooking;
 import com.aegis.companion.model.entity.User;
+import com.aegis.companion.model.vo.*;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
@@ -25,7 +25,21 @@ public class ChatToolCallingService {
     private ParkingService parkingService;
     @Autowired
     private ParkingReservationCoreService reservationService;
-
+    //=====================================================医疗模块
+    @Autowired
+    private DoctorService doctorService;
+    @Autowired
+    private ScheduleService scheduleService;
+    @Autowired
+    private AppointmentService appointmentService;
+//    查询预约
+    //=====================================================活动模块
+    @Autowired
+    private RoomBookingService roomBookingService;
+    //=====================================================工单模块
+//    创建工单
+    @Autowired
+    private TicketService ticketService;
 
     //=====================================================车位模块
 //    获取空车位
@@ -47,6 +61,8 @@ public class ChatToolCallingService {
         return reservationId;
     }
 
+//    查询医生
+
     //    取消预约
     @Tool(name = "theUserCancelsTheParkingSpaceReservation", description = "取消车位预约,用户取消未过期的、预约")
     public String cancelReservation(
@@ -56,8 +72,6 @@ public class ChatToolCallingService {
         reservationService.cancelReservation(id, user);
         return "取消成功";
     }
-//    查询预约
-
 
     @Tool(name = "userParkingSpaceReservationRecord", description = "获取用户全部车位历史预约（按时间倒序）")
     public List<ParkingReservation> listUserReservations(
@@ -65,21 +79,14 @@ public class ChatToolCallingService {
         User user = (User) toolContext.getContext().get("user");
         return reservationService.listUserReservations(user);
     }
-
-    //=====================================================医疗模块
-    @Autowired
-    private DoctorService doctorService;
-    @Autowired
-    private ScheduleService scheduleService;
-    @Autowired
-    private AppointmentService appointmentService;
-
-//    查询医生
+//    预约医疗
 
     @Tool(name = "userLooksUpAListOfDoctors", description = "获取所有在岗医生基本信息")
     public List<DoctorVO> listAllDoctors() {
         return doctorService.listAllDoctors();
     }
+
+//    取消预约
 
     //    查询排班
     @Tool(name = "userQueriesTheDoctorSchedule", description = "获取医生未来日期排班表")
@@ -88,7 +95,6 @@ public class ChatToolCallingService {
             Long doctorId) {
         return scheduleService.getFutureSchedules(doctorId);
     }
-//    预约医疗
 
     @Tool(name = "userCreatesAMedicalAppointment", description = "提交新的医疗预约申请")
     public AppointmentVO createAppointment(
@@ -100,8 +106,6 @@ public class ChatToolCallingService {
         User user = (User) toolContext.getContext().get("user");
         return appointmentService.createAppointment(dto, user.getId());
     }
-
-//    取消预约
 
     @Tool(name = "userCancelsTheMedicalAppointment", description = "取消未开始的医疗预约")
     public String cancelAppointment(
@@ -121,16 +125,12 @@ public class ChatToolCallingService {
         return appointmentService.listUserAppointments(user.getId());
     }
 
-
-    //=====================================================活动模块
-    @Autowired
-    private RoomBookingService roomBookingService;
-
     //    查询活动室
     @Tool(name = "userQueriesTheListOfActivityRooms", description = "查询当前可预约的活动室列表")
     public List<CommunityRoom> getAvailableRooms() {
         return roomBookingService.getAvailableRooms();
     }
+//    取消预约
 
     //    创建预约
     @Tool(name = "userCreateRoomRequest", description = "用户提交活动室使用申请")
@@ -157,7 +157,6 @@ public class ChatToolCallingService {
         User user = (User) toolContext.getContext().get("user");
         return roomBookingService.createBooking(dto, user);
     }
-//    取消预约
 
     @Tool(name = "userCancelsTheRoomApplication", description = "用户取消待审批状态的预约申请，仅待审批状态可以取消")
     public String cancelBooking(
@@ -182,12 +181,6 @@ public class ChatToolCallingService {
 
         return roomBookingService.queryUserBookings(user, page);
     }
-
-
-    //=====================================================工单模块
-//    创建工单
-    @Autowired
-    private TicketService ticketService;
 
     @Tool(name = "userCreatesTicket", description = "用户创建新的服务工单")
     public String createTicket(

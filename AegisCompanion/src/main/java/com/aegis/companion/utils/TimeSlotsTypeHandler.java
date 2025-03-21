@@ -1,8 +1,8 @@
 package com.aegis.companion.utils;
 
+import com.aegis.companion.model.enums.TimeSlotStatusEnum;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.aegis.companion.model.enums.TimeSlotStatusEnum;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 

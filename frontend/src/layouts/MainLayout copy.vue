@@ -3,7 +3,7 @@
     <!-- 左侧导航栏 -->
     <div class="side-nav" :class="{ 'collapsed': isCollapsed }">
       <div class="nav-header">
-        <img src="@/assets/vue.svg" class="logo" v-if="!isCollapsed">
+        <img src="../assets/icon.png" class="logo" v-if="!isCollapsed">
         <h2 v-show="!isCollapsed">智慧社区</h2>
         <el-tooltip :content="isCollapsed ? '展开菜单' : '折叠菜单'" placement="right">
           <div class="collapse-btn" @click="isCollapsed = !isCollapsed">

@@ -1,13 +1,13 @@
 package com.aegis.companion.config.TicketSTateMachine;
 
-import com.aegis.companion.service.AllocationService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.aegis.companion.dao.StateMachineRecordMapper;
 import com.aegis.companion.model.entity.StateMachineRecord;
 import com.aegis.companion.model.enums.TicketEvent;
 import com.aegis.companion.model.enums.TicketState;
+import com.aegis.companion.service.AllocationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -144,7 +144,7 @@ public class TicketStateMachineConfig
                     // 安全处理事件头
                     Optional.ofNullable(context.getEventHeaders())
                             .orElseGet(Collections::emptyMap)
-                            .forEach((key, value) -> contextData.put("header_"+ key, value));
+                            .forEach((key, value) -> contextData.put("header_" + key, value));
 
                     // 安全处理扩展变量
                     Optional.ofNullable(context.getExtendedState().getVariables())
