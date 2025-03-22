@@ -1,4 +1,3 @@
-// file: src/store/chatStore.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useWebsocketStore } from './websocketStore';

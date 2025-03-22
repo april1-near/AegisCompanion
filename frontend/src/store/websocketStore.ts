@@ -1,4 +1,3 @@
-// file: src/store/websocketStore.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import SockJS from 'sockjs-client';

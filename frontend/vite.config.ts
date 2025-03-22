@@ -28,8 +28,15 @@ export default defineConfig({
         ws: true, 
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/ws/, '/ws'),
+      },
+      '/api':
+      {
+        target: 'http://localhost:8090/api/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
-    }
+    },
+    
   }
 
 })
