@@ -39,7 +39,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // 启用 RabbitMQ 作为外部 STOMP 代理（替代内存代理）
         registry.enableStompBrokerRelay("/queue", "/topic")
-                .setRelayHost("localhost")          // RabbitMQ 服务器地址
+                .setRelayHost(System.getenv("SPRING_RABBITMQ_HOST"))          // RabbitMQ 服务器地址
                 .setRelayPort(61613)                // STOMP 协议默认端口
                 .setVirtualHost("/")                // 虚拟主机（根据实际情况配置）
                 .setClientLogin("guest")            // RabbitMQ 用户名

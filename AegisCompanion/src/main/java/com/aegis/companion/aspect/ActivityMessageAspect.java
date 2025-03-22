@@ -1,4 +1,3 @@
-// file: aspect/ActivityMessageAspect.java
 package com.aegis.companion.aspect;
 
 import com.aegis.companion.model.dto.BookingApproveDTO;
@@ -40,7 +39,7 @@ public class ActivityMessageAspect {
     }
 
     private BookingStatusEnum parseEventType(String methodName, Object[] args) {
-        return switch (methodName) {
+        return switch (methodName){
             case "createBooking" -> BookingStatusEnum.PENDING;
             case "approveBooking" -> {
                 BookingApproveDTO dto = (BookingApproveDTO) args[1];
