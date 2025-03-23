@@ -51,7 +51,7 @@ AegisCompanion 是一款面向现代智慧社区的综合性服务平台，整�
 ### 使用Docker Compose部署
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/april1-near/AegisCompanion.git
+git clone git@github.com:aprilLlie/AegisCompanion.git
 cd AegisCompanion
 # 2. 初始化环境配置
 cp .env.example .env
