@@ -28,7 +28,7 @@ public class RabbitMQConfig {
     @Bean
     public DefaultClassMapper classMapper() {
         DefaultClassMapper classMapper = new DefaultClassMapper();
-        classMapper.setTrustedPackages("com.smartcommunity.smart_community_platform.model.dto.notification"); // 信任指定包
+        classMapper.setTrustedPackages("com.aegis.companion.model.dto.notification"); // 信任指定包
         return classMapper;
     }
 

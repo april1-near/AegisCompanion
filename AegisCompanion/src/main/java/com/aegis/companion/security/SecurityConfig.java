@@ -76,11 +76,11 @@ public class SecurityConfig {
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"
         ));
 
-//
-//        config.setAllowedOriginPatterns(Arrays.asList(
-//                "http://localhost:5173"
-////                "https://your-production-domain.com"
-//        ));
+
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:5173"
+//                "https://your-production-domain.com"
+        ));
 
         // 启用凭证
         config.setAllowCredentials(true);
